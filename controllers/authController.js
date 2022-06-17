@@ -12,14 +12,14 @@ let transporter = nodemailer.createTransport({
 });
 
 const register = async (req, res) => {
-    const {email, html} = req.body;
+    const {email, link} = req.body;
     const errors = validationResult(req);
     const token = crypto.randomBytes(64).toString("base64url");
     let mailOptions = {
         from: "rahmatfauzi.w@gmail.com",
         to: email,
         subject: "Account Verification",
-        html: html,
+        html: `Click this link to verify your account : <a href="${link}?email=${email}&token=${token}">Activate</a>`,
     };
 
     if (!errors.isEmpty()) {
@@ -80,12 +80,12 @@ const verifyAccount = async (req, res) => {
 };
 
 const resendEmail = async (req, res) => {
-    const {email, html} = req.body;
+    const {email, link} = req.body;
     let mailOptions = {
         from: "rahmatfauzi.w@gmail.com",
         to: email,
         subject: "Account Verification",
-        html: html,
+        html: `Click this link to verify your account : <a href="${link}?email=${email}&token=${token}">Activate</a>`,
     };
 
     const checkUserToken = await UserToken.findOne({where: {email: email}});
