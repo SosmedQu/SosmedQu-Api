@@ -28,7 +28,13 @@ module.exports = {
             password: {
                 type: Sequelize.STRING,
             },
+            accessToken: {
+                type: Sequelize.TEXT,
+            },
             gender: {
+                type: Sequelize.STRING,
+            },
+            placeOfBirth: {
                 type: Sequelize.STRING,
             },
             birthDay: {
@@ -44,6 +50,9 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             studyAt: {
+                type: Sequelize.STRING,
+            },
+            province: {
                 type: Sequelize.STRING,
             },
             createdAt: {

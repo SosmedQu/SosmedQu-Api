@@ -6,6 +6,7 @@
     "scripts": {
         "start": "node app",
         "migrate": "npx sequelize-cli db:migrate",
+        "seed": "npx sequelize-cli db:seed:all",
         "down": "npx sequelize-cli db:migrate:undo:all",
         "dev": "nodemon app"
     },

@@ -1,5 +1,7 @@
 const express = require("express");
 const authController = require("../controllers/authController");
+const profileController = require("../controllers/profileController");
+const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
 
 const router = express.Router();
@@ -16,6 +18,7 @@ router.post(
     "/createPassword",
 
     [
+        check("username", "Username tidak boleh kosong").trim().isLength({min: 1}),
         check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8}),
         check("password", "Konfirmasi password tidak sesuai").custom((value, {req}) => {
             if (value !== req.body.confirmPassword) {

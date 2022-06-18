@@ -1,8 +1,10 @@
+require("dotenv").config();
 const {validationResult} = require("express-validator");
 const nodemailer = require("nodemailer");
 const {UserToken, User} = require("../models");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -56,10 +58,10 @@ const register = async (req, res) => {
 
 const verifyAccount = async (req, res) => {
     const {token, email} = req.query;
-    const checkUserToken = await UserToken.findOne({where: {email: email}});
 
-    console.log(checkUserToken.token);
-    console.log(token);
+    if (!token || !email) return res.sendStatus(403);
+
+    const checkUserToken = await UserToken.findOne({where: {email: email}});
 
     if (!checkUserToken) {
         return res.status(400).json({msg: "email tidak ada"});
@@ -69,7 +71,7 @@ const verifyAccount = async (req, res) => {
         return res.status(400).json({msg: "token salah"});
     }
 
-    const user = await User.create({email: email, statusId: 1});
+    const user = await User.create({email: email, statusId: 1, roleId: 3});
     await UserToken.destroy({
         where: {
             email: email,
@@ -81,6 +83,7 @@ const verifyAccount = async (req, res) => {
 
 const resendEmail = async (req, res) => {
     const {email, link} = req.body;
+    const token = crypto.randomBytes(64).toString("base64url");
     let mailOptions = {
         from: "rahmatfauzi.w@gmail.com",
         to: email,
@@ -118,8 +121,11 @@ const createPassword = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     try {
+        const user = await User.findOne({where: {email: email}});
+        const accessToken = jwt.sign({userId: user.id, username: user.username, email: user.email}, process.env.ACCESS_TOKEN_SECRET);
+
         await User.update(
-            {password: hashPassword, username: username},
+            {password: hashPassword, username: username, accessToken: accessToken},
             {
                 where: {
                     email: email,
@@ -127,7 +133,7 @@ const createPassword = async (req, res) => {
             }
         );
 
-        return res.status(200).json({msg: "Password berhasil dibuat"});
+        return res.status(200).json({msg: "Password berhasil dibuat", accessToken: accessToken});
     } catch (err) {
         console.log(err);
     }
