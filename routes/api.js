@@ -13,7 +13,6 @@ const profileFileStorange = multer.diskStorage({
         cb(null, Date.now() + "_" + file.originalname);
     },
 });
-const maxSize = 1 * 1024 * 1024; // 1MB
 const profileUpload = multer({
     storage: profileFileStorange,
 });
@@ -21,17 +20,17 @@ const profileUpload = multer({
 // router.route("/").get(doSomething()).post(doSomething());
 // router.route("/").put(doSOmething()).delete(doSomething());
 
-router.post("/register", [check("email", "Email tidak boleh kosong").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail()], authController.register);
+//? ENDPOINT API AUTHENTICATION
 
-router.get("/verifyAccount", authController.verifyAccount);
-router.post("resendEmail", authController.resendEmail);
-
+router.post("/auth/register", [check("email", "Email tidak boleh kosong").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail()], authController.register);
+router.get("/auth/verifyAccount", authController.verifyAccount);
+router.post("/auth/resendEmail", authController.resendEmail);
 router.post(
-    "/createPassword",
+    "/auth/createPassword",
     [
-        check("username", "Username tidak boleh kosong").trim().isLength({min: 1}),
+        check("username", "Username harus diisi").trim().isLength({min: 1}),
         check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8}),
-        check("password", "Konfirmasi password tidak sesuai").custom((value, {req}) => {
+        check("confirmPassword", "Konfirmasi password tidak sesuai").custom((value, {req}) => {
             if (value !== req.body.confirmPassword) {
                 throw new Error("Konfirmasi password tidak sesuai");
             }
@@ -40,9 +39,15 @@ router.post(
     ],
     authController.createPassword
 );
+router.post("/auth/login", [check("email", "Email harus diisi").trim().isLength({min: 1}), check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8})], authController.login);
+router.get("/auth/logout", authController.logout);
+
+//? END OF ENDPOINT API AUTHENTICATION
+
+//? ENDPOINT API PROFILE
 
 router.post(
-    "/validateStudent",
+    "/profile/validateStudent",
     verifyToken,
     profileUpload.single("studentCard"),
     [

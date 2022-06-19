@@ -15,26 +15,30 @@ const validateStudent = async (req, res) => {
 
     const encodeImage = fs.readFileSync(req.file.path, "base64");
 
-    await User.update(
-        {
-            username,
-            gender,
-            placeOfBirth,
-            birthDay: convertBirthDay,
-            noHp,
-            studentCard: encodeImage,
-            nisn,
-            studyAt,
-            province,
-        },
-        {
-            where: {
-                email: "rahmatfauzi841@gmail.com",
+    try {
+        await User.update(
+            {
+                username,
+                gender,
+                placeOfBirth,
+                birthDay: convertBirthDay,
+                noHp,
+                studentCard: encodeImage,
+                nisn,
+                studyAt,
+                province,
             },
-        }
-    );
+            {
+                where: {
+                    email,
+                },
+            }
+        );
 
-    return res.status(200).json({msg: "Validasi siswa berhasil"});
+        return res.status(200).json({msg: "Validasi siswa berhasil"});
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports = {validateStudent};

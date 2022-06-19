@@ -121,17 +121,21 @@ const createPassword = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     try {
-        const user = await User.findOne({where: {email: email}});
+        const user = await User.findOne({where: {email}});
         const accessToken = jwt.sign({userId: user.id, username: user.username, email: user.email}, process.env.ACCESS_TOKEN_SECRET);
 
         await User.update(
-            {password: hashPassword, username: username, accessToken: accessToken},
+            {password: hashPassword, username, accessToken},
             {
                 where: {
-                    email: email,
+                    email,
                 },
             }
         );
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+        });
 
         return res.status(200).json({msg: "Password berhasil dibuat", accessToken: accessToken});
     } catch (err) {
@@ -139,4 +143,66 @@ const createPassword = async (req, res) => {
     }
 };
 
-module.exports = {register, verifyAccount, createPassword, resendEmail};
+const login = async (req, res) => {
+    const {email, password} = req.body;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()});
+    }
+
+    try {
+        const user = await User.findOne({where: {email}});
+
+        if (!user) return res.status(404).json({msg: "Email / password salah"});
+
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) return res.status(400).json({msg: "Email / password salah"});
+
+        const accessToken = jwt.sign({userId: user.id, username: user.username, email}, process.env.ACCESS_TOKEN_SECRET);
+
+        await User.update(
+            {accessToken},
+            {
+                where: {
+                    email,
+                },
+            }
+        );
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+        });
+
+        return res.status(200).json({msg: "Berhasil login", accessToken});
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const logout = async (req, res) => {
+    const accessToken = req.cookies.accessToken;
+    if (!accessToken) return res.sendStatus(204);
+
+    try {
+        const user = await User.findOne({where: {accessToken}});
+        if (!user) return res.sendStatus(204);
+
+        await User.update(
+            {accessToken: null},
+            {
+                where: {
+                    id: user.id,
+                },
+            }
+        );
+
+        res.clearCookie("accessToken");
+        return res.status(200).json({msg: "Berhasil logout"});
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+module.exports = {register, verifyAccount, createPassword, resendEmail, login, logout};

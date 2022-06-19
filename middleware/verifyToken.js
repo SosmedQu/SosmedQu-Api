@@ -2,7 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.header("authorization");
+    const authHeader = req.cookies.accessToken;
     const token = authHeader && authHeader.split(" ")[1];
 
     if (token == null) return res.status(401).json({msg: "Unauthorized"});
