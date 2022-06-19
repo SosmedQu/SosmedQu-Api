@@ -42,7 +42,7 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
             },
             studentCard: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
             },
             nisn: {
                 type: Sequelize.INTEGER,
