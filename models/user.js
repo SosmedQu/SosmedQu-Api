@@ -26,7 +26,13 @@ module.exports = (sequelize, Sequelize) => {
             password: {
                 type: Sequelize.STRING,
             },
+            accessToken: {
+                type: Sequelize.TEXT,
+            },
             gender: {
+                type: Sequelize.STRING,
+            },
+            placeOfBirth: {
                 type: Sequelize.STRING,
             },
             birthDay: {
@@ -36,12 +42,15 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
             },
             studentCard: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
             },
             nisn: {
                 type: Sequelize.INTEGER,
             },
             studyAt: {
+                type: Sequelize.STRING,
+            },
+            province: {
                 type: Sequelize.STRING,
             },
             createdAt: {
