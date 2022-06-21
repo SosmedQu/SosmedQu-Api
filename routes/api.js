@@ -23,7 +23,7 @@ const profileUpload = multer({
 //? ENDPOINT API AUTHENTICATION
 
 router.post("/auth/register", [check("email", "Email tidak boleh kosong").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail()], authController.register);
-router.get("/auth/verifyAccount", authController.verifyAccount);
+router.post("/auth/verifyAccount", authController.verifyAccount);
 router.post("/auth/resendEmail", authController.resendEmail);
 router.post(
     "/auth/createPassword",
@@ -31,7 +31,7 @@ router.post(
         check("username", "Username harus diisi").trim().isLength({min: 1}),
         check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8}),
         check("confirmPassword", "Konfirmasi password tidak sesuai").custom((value, {req}) => {
-            if (value !== req.body.confirmPassword) {
+            if (value !== req.body.password) {
                 throw new Error("Konfirmasi password tidak sesuai");
             }
             return true;
@@ -39,7 +39,26 @@ router.post(
     ],
     authController.createPassword
 );
-router.post("/auth/login", [check("email", "Email harus diisi").trim().isLength({min: 1}), check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8})], authController.login);
+router.post(
+    "/auth/login",
+    [check("email", "Email harus diisi").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail(), check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8})],
+    authController.login
+);
+router.post("/auth/forgotPassword", [check("email", "Email harus diisi").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail()], authController.forgotPassword);
+router.post("/auth/resetPassword", authController.resetPassword);
+router.post(
+    "/auth/changePassword",
+    [
+        check("password", "Password harus minimal 8 karakter").trim().isLength({min: 8}),
+        check("newPassword", "Konfirmasi password tidak sesuai").custom((value, {req}) => {
+            if (value !== req.body.password) {
+                throw new Error("Konfirmasi password tidak sesuai");
+            }
+            return true;
+        }),
+    ],
+    authController.changePassword
+);
 router.get("/auth/logout", authController.logout);
 
 //? END OF ENDPOINT API AUTHENTICATION
