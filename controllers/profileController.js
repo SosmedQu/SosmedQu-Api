@@ -13,7 +13,7 @@ const validateStudent = async (req, res) => {
         return res.status(400).json({errors: errors.array()});
     }
 
-    const encodeImage = fs.readFileSync(req.file.path, "base64");
+    const studentCard = req.file.filename;
 
     try {
         await User.update(
@@ -23,7 +23,7 @@ const validateStudent = async (req, res) => {
                 placeOfBirth,
                 birthDay: convertBirthDay,
                 noHp,
-                studentCard: encodeImage,
+                studentCard,
                 nisn,
                 studyAt,
                 province,
