@@ -1,8 +1,9 @@
 const express = require("express");
 const authController = require("../controllers/authController");
 const profileController = require("../controllers/profileController");
+const postController = require("../controllers/postController");
 const {verifyToken} = require("../middleware/verifyToken");
-const {check, body} = require("express-validator");
+const {check, body, validationResult} = require("express-validator");
 const router = express.Router();
 const multer = require("multer");
 const profileFileStorange = multer.diskStorage({
@@ -17,11 +18,7 @@ const profileUpload = multer({
     storage: profileFileStorange,
 });
 
-// router.route("/").get(doSomething()).post(doSomething());
-// router.route("/").put(doSOmething()).delete(doSomething());
-
 //? ENDPOINT API AUTHENTICATION
-
 router.post("/auth/register", [check("email", "Email tidak boleh kosong").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail()], authController.register);
 router.post("/auth/verifyAccount", authController.verifyAccount);
 router.post("/auth/resendEmail", authController.resendEmail);
@@ -60,25 +57,33 @@ router.post(
     authController.changePassword
 );
 router.get("/auth/logout", authController.logout);
-
 //? END OF ENDPOINT API AUTHENTICATION
 
 //? ENDPOINT API PROFILE
-
 router.post(
     "/profile/validateStudent",
     verifyToken,
     profileUpload.single("studentCard"),
     [
         check("studentCard").custom((value, {req}) => {
-            if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
-                throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+            if (!req.file) {
+                throw new Error("Kartu pelajar wajib diupload");
             }
             return true;
         }),
         check("studentCard").custom((value, {req}) => {
-            if (req.file.size > 5000000) {
-                throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 5 Mb");
+            if (req.file) {
+                if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
+                    throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+                }
+            }
+            return true;
+        }),
+        check("studentCard").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.size > 5000000) {
+                    throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 5 Mb");
+                }
             }
             return true;
         }),
@@ -96,5 +101,9 @@ router.post(
 
     profileController.validateStudent
 );
+//? END OF ENDPOINT API AUTHENTICATION
+
+//? ENDPOINT API POSTS
+router.get("/posts", postController.getAllPosts);
 
 module.exports = router;

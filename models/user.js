@@ -11,9 +11,6 @@ module.exports = (sequelize, Sequelize) => {
             roleId: {
                 type: Sequelize.INTEGER,
             },
-            postId: {
-                type: Sequelize.INTEGER,
-            },
             statusId: {
                 type: Sequelize.INTEGER,
             },

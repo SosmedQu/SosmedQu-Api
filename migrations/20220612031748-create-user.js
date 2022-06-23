@@ -13,9 +13,6 @@ module.exports = {
             roleId: {
                 type: Sequelize.INTEGER,
             },
-            postId: {
-                type: Sequelize.INTEGER,
-            },
             statusId: {
                 type: Sequelize.INTEGER,
             },
@@ -41,7 +38,7 @@ module.exports = {
                 type: Sequelize.DATE,
             },
             noHp: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
             },
             studentCard: {
                 type: Sequelize.TEXT,

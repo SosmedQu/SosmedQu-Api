@@ -1,0 +1,101 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "SosmedQU API",
+        "description": "List Endpoint SosmedQU API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Register",
+            "description": "Register Endpoint"
+        },
+        {
+            "name": "Login",
+            "description": "Login Endpoint"
+        },
+        {
+            "name": "Posts",
+            "description": "Posts Endpoint"
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": ["Register"],
+                "summary": "Create Account",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/auth/verifyAccount": {
+            "post": {
+                "tags": ["Register"],
+                "summary": "Account Verification",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "description": "User Token",
+                                        "example": "fKYejcCH94apYNlDe4GdtaYMCWaWo1t1z_yJDCdI8BigOMLIGcJC0tSg_fkos6FwdSTPDe_OSGf3ZlLaeBeXDw"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/posts": {
+            "get": {
+                "tags": ["Posts"],
+                "summary": "Get All Posts",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        }
+    }
+}

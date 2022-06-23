@@ -9,7 +9,9 @@ const validateStudent = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        fs.unlinkSync(req.file.path);
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         return res.status(400).json({errors: errors.array()});
     }
 
@@ -18,6 +20,7 @@ const validateStudent = async (req, res) => {
     try {
         await User.update(
             {
+                roleId: 2,
                 username,
                 gender,
                 placeOfBirth,
