@@ -85,6 +85,39 @@
                 }
             }
         },
+        "/api/auth/login": {
+            "post": {
+                "tags": ["Login"],
+                "summary": "Login Application",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "description": "User Password",
+                                        "example": "your password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/posts": {
             "get": {
                 "tags": ["Posts"],

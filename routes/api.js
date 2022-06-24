@@ -6,7 +6,7 @@ const {verifyToken} = require("../middleware/verifyToken");
 const {check, body, validationResult} = require("express-validator");
 const router = express.Router();
 const multer = require("multer");
-const profileFileStorange = multer.diskStorage({
+const profileFilesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "./images/profiles");
     },
@@ -15,7 +15,18 @@ const profileFileStorange = multer.diskStorage({
     },
 });
 const profileUpload = multer({
-    storage: profileFileStorange,
+    storage: profileFilesStorage,
+});
+const postFilesStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./images/posts");
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "_" + file.originalname);
+    },
+});
+const postUpload = multer({
+    storage: postFilesStorage,
 });
 
 //? ENDPOINT API AUTHENTICATION
@@ -105,5 +116,7 @@ router.post(
 
 //? ENDPOINT API POSTS
 router.get("/posts", postController.getAllPosts);
+router.post("/posts", postUpload.array("postImages"), [check("caption", "Caption harus diisi").exists().trim().isLength({min: 1})], postController.createPost);
+router.delete("/posts", postController.deletePost);
 
 module.exports = router;

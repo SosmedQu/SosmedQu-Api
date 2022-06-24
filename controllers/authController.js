@@ -40,6 +40,12 @@ const register = async (req, res) => {
                 transporter.sendMail(mailOptions, async (err, info) => {
                     if (err) return res.status(400).json({msg: "Gagal mengirim email"});
 
+                    await UserToken.destroy({
+                        where: {
+                            email: email,
+                        },
+                    });
+
                     const userToken = await UserToken.create({email: email, token: token});
 
                     return res.status(200).json({msg: `Verifikasi Berhasil Dikirim ke ${email}`});
@@ -85,7 +91,12 @@ const verifyAccount = async (req, res) => {
             return res.status(400).json({msg: "token salah"});
         }
 
-        const user = await User.create({email: email, statusId: 1, roleId: 3});
+        const user = User.findOne({where: {email}});
+
+        if (!user) {
+            await User.create({email: email, statusId: 1, roleId: 3});
+        }
+
         await UserToken.destroy({
             where: {
                 email: email,
