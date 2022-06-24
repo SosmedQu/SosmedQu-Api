@@ -67,7 +67,7 @@ router.post(
     ],
     authController.changePassword
 );
-router.get("/auth/logout", authController.logout);
+router.get("/auth/logout", verifyToken, authController.logout);
 //? END OF ENDPOINT API AUTHENTICATION
 
 //? ENDPOINT API PROFILE
@@ -115,8 +115,10 @@ router.post(
 //? END OF ENDPOINT API AUTHENTICATION
 
 //? ENDPOINT API POSTS
-router.get("/posts", postController.getAllPosts);
-router.post("/posts", postUpload.array("postImages"), [check("caption", "Caption harus diisi").exists().trim().isLength({min: 1})], postController.createPost);
-router.delete("/posts", postController.deletePost);
+router.get("/posts", verifyToken, postController.getAllPosts);
+router.post("/posts", verifyToken, postUpload.array("postFiles"), [check("caption", "Caption harus diisi").exists().trim().isLength({min: 1})], postController.createPost);
+router.get("/posts/edit/:id", postController.editPost);
+router.put("/posts", postUpload.array("postFiles"), postController.updatePost);
+router.delete("/posts", verifyToken, postController.deletePost);
 
 module.exports = router;

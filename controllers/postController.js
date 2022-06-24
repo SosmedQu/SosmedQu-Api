@@ -25,6 +25,7 @@ const getAllPosts = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
+    console.log(req.cookies.accessToken);
     const {caption, privacy, categoryId} = req.body;
     const decoded = jwt_decode(req.cookies.accessToken);
     const errors = validationResult(req);
@@ -49,7 +50,6 @@ const createPost = async (req, res) => {
         if (req.files) {
             req.files.forEach((file) => {
                 PostFile.create({postId: post.id, fileName: file.filename});
-                console.log(file.path);
             });
         }
 
@@ -60,7 +60,62 @@ const createPost = async (req, res) => {
     }
 };
 
-const updatePost = async (req, res) => {};
+const editPost = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const post = await Post.findOne({where: {id}});
+        const postFiles = await PostFile.findAll({where: {postId: id}});
+
+        return res.status(200).json({post, postFiles});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+
+const updatePost = async (req, res) => {
+    const {id, caption, privacy, categoryId, oldFiles} = req.body;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        if (req.files) {
+            req.files.forEach(function (file) {
+                fs.unlinkSync(file.path);
+            });
+        }
+        return res.status(400).json({errors: errors.array()});
+    }
+
+    if (req.files.length != 0) {
+        if (oldFiles) {
+            await PostFile.destroy({
+                where: {
+                    postId: id,
+                },
+            });
+
+            oldFiles.forEach(async (file) => {
+                fs.unlinkSync(`images/posts/${file}`);
+            });
+
+            req.files.forEach((file) => {
+                PostFile.create({postId: id, fileName: file.filename});
+            });
+        }
+    }
+
+    await Post.update(
+        {caption, privacy, categoryId},
+        {
+            where: {
+                id,
+            },
+        }
+    );
+
+    return res.status(200).json({msg: "Berhasil update"});
+};
 
 const deletePost = async (req, res) => {
     const {id} = req.body;
@@ -91,4 +146,4 @@ const deletePost = async (req, res) => {
     }
 };
 
-module.exports = {getAllPosts, createPost, updatePost, deletePost};
+module.exports = {getAllPosts, createPost, updatePost, deletePost, editPost};
