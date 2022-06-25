@@ -20,6 +20,10 @@
             "description": "Login Endpoint"
         },
         {
+            "name": "Logout",
+            "description": "Logout Endpoint"
+        },
+        {
             "name": "Posts",
             "description": "Posts Endpoint"
         }
@@ -39,6 +43,10 @@
                                         "type": "string",
                                         "description": "User Email",
                                         "example": "example@gmail.com"
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "example": "http://localhost:3000/"
                                     }
                                 }
                             }
@@ -85,6 +93,86 @@
                 }
             }
         },
+        "/api/auth/resendEmail": {
+            "post": {
+                "tags": ["Register"],
+                "summary": "Resend Email",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "example": "http://localhost:3000/"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "description": "User Token",
+                                        "example": "fKYejcCH94apYNlDe4GdtaYMCWaWo1t1z_yJDCdI8BigOMLIGcJC0tSg_fkos6FwdSTPDe_OSGf3ZlLaeBeXDw"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/auth/createPassword": {
+            "post": {
+                "tags": ["Register"],
+                "summary": "Create Password",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "description": "User Password",
+                                        "example": "12345678"
+                                    },
+                                    "confirmPassword": {
+                                        "type": "string",
+                                        "description": "Confirm Password",
+                                        "example": "12345678"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "description": "Username",
+                                        "example": "username"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": ["Login"],
@@ -104,13 +192,128 @@
                                     "password": {
                                         "type": "string",
                                         "description": "User Password",
-                                        "example": "your password"
+                                        "example": "12345678"
                                     }
                                 }
                             }
                         }
                     }
                 },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/auth/forgotPassword": {
+            "post": {
+                "tags": ["Login"],
+                "summary": "Forgot Password",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "example": "http://localhost:3000/"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "description": "User Token",
+                                        "example": "fKYejcCH94apYNlDe4GdtaYMCWaWo1t1z_yJDCdI8BigOMLIGcJC0tSg_fkos6FwdSTPDe_OSGf3ZlLaeBeXDw"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/auth/resetPassword": {
+            "post": {
+                "tags": ["Login"],
+                "summary": "Reset Password",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "description": "User Token",
+                                        "example": "fKYejcCH94apYNlDe4GdtaYMCWaWo1t1z_yJDCdI8BigOMLIGcJC0tSg_fkos6FwdSTPDe_OSGf3ZlLaeBeXDw"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/auth/changePassword": {
+            "post": {
+                "tags": ["Login"],
+                "summary": "Change Password",
+                "description": "",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "newPassword": {
+                                        "type": "string",
+                                        "description": "User Password",
+                                        "example": "12345678"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User Email",
+                                        "example": "example@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "get": {
+                "tags": ["Logout"],
+                "summary": "Logout Application",
+                "description": "",
                 "responses": {
                     "200": {
                         "description": "Success"

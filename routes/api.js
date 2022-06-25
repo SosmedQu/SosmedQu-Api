@@ -117,8 +117,8 @@ router.post(
 //? ENDPOINT API POSTS
 router.get("/posts", verifyToken, postController.getAllPosts);
 router.post("/posts", verifyToken, postUpload.array("postFiles"), [check("caption", "Caption harus diisi").exists().trim().isLength({min: 1})], postController.createPost);
-router.get("/posts/edit/:id", postController.editPost);
-router.put("/posts", postUpload.array("postFiles"), postController.updatePost);
+router.get("/posts/edit/:id", verifyToken, postController.editPost);
+router.put("/posts", verifyToken, postUpload.array("postFiles"), postController.updatePost);
 router.delete("/posts", verifyToken, postController.deletePost);
 
 module.exports = router;
