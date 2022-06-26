@@ -25,7 +25,6 @@ const getAllPosts = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
-    console.log(req.cookies.accessToken);
     const {caption, privacy, categoryId} = req.body;
     const decoded = jwt_decode(req.cookies.accessToken);
     const errors = validationResult(req);
@@ -99,6 +98,10 @@ const updatePost = async (req, res) => {
                 fs.unlinkSync(`images/posts/${file}`);
             });
 
+            req.files.forEach((file) => {
+                PostFile.create({postId: id, fileName: file.filename});
+            });
+        } else {
             req.files.forEach((file) => {
                 PostFile.create({postId: id, fileName: file.filename});
             });

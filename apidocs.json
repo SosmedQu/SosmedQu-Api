@@ -310,7 +310,7 @@
             }
         },
         "/api/auth/logout": {
-            "get": {
+            "post": {
                 "tags": ["Logout"],
                 "summary": "Logout Application",
                 "description": "",

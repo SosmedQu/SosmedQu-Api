@@ -2,6 +2,7 @@ const express = require("express");
 const authController = require("../controllers/authController");
 const profileController = require("../controllers/profileController");
 const postController = require("../controllers/postController");
+const ebookController = require("../controllers/ebookController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check, body, validationResult} = require("express-validator");
 const router = express.Router();
@@ -27,6 +28,23 @@ const postFilesStorage = multer.diskStorage({
 });
 const postUpload = multer({
     storage: postFilesStorage,
+});
+const ebookStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        if (file.fieldname === "ebookImage") {
+            // if uploading resume
+            cb(null, "./ebooks/images");
+        } else {
+            // else uploading image
+            cb(null, "./ebooks/files");
+        }
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "_" + file.originalname);
+    },
+});
+const ebookUpload = multer({
+    storage: ebookStorage,
 });
 
 //? ENDPOINT API AUTHENTICATION
@@ -67,10 +85,11 @@ router.post(
     ],
     authController.changePassword
 );
-router.get("/auth/logout", verifyToken, authController.logout);
-//? END OF ENDPOINT API AUTHENTICATION
+router.post("/auth/logout", verifyToken, authController.logout);
+//? END OF ENDPOINT API OF AUTHENTICATION
 
 //? ENDPOINT API PROFILE
+router.get("/profile", profileController.getProfile);
 router.post(
     "/profile/validateStudent",
     verifyToken,
@@ -112,7 +131,7 @@ router.post(
 
     profileController.validateStudent
 );
-//? END OF ENDPOINT API AUTHENTICATION
+//? END OF ENDPOINT OF API PROFILE
 
 //? ENDPOINT API POSTS
 router.get("/posts", verifyToken, postController.getAllPosts);
@@ -120,5 +139,28 @@ router.post("/posts", verifyToken, postUpload.array("postFiles"), [check("captio
 router.get("/posts/edit/:id", verifyToken, postController.editPost);
 router.put("/posts", verifyToken, postUpload.array("postFiles"), postController.updatePost);
 router.delete("/posts", verifyToken, postController.deletePost);
+//? END OF ENDPOINT OF API POSTS
+
+//? ENDPOINT API EBOOKS
+router.post(
+    "/ebooks",
+    ebookUpload.fields([
+        {
+            name: "ebookImage",
+        },
+        {
+            name: "ebookFile",
+        },
+    ]),
+    [
+        check("name", "Nama ebook harus diisi").exists().trim().isLength({min: 1}),
+        check("description", "Deskripsi ebook harus diisi").exists().trim().isLength({min: 1}),
+        check("writer", "Nama penulis harus diisi").exists().trim().isLength({min: 1}),
+        check("publisher", "Penerbit harus diisi").exists().trim().isLength({min: 1}),
+        check("publicationYear", "Tahun terbit harus diisi").exists().trim().isLength({min: 1}),
+        check("isbn", "Isbn harus diisi").exists().trim().isLength({min: 1}),
+    ],
+    ebookController.createEbook
+);
 
 module.exports = router;

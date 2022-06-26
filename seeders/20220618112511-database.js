@@ -16,7 +16,7 @@ for (let i = 0; i < 10; i++) {
 for (let i = 0; i < posts.length; i++) {
     postFiles.push({
         postId: Math.ceil(Math.random() * posts.length),
-        fileName: images[Math.ceil(Math.random() * images.length)],
+        fileName: images[Math.floor(Math.random() * images.length)],
     });
 }
 

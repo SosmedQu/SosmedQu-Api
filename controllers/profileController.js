@@ -2,6 +2,17 @@ require("dotenv").config();
 const {validationResult} = require("express-validator");
 const {User} = require("../models");
 const fs = require("fs");
+const jwt_decode = require("jwt-decode");
+
+const getProfile = async (req, res) => {
+    const decoded = jwt_decode(req.cookies.accessToken);
+
+    const user = await User.findOne({where: {id: decoded.userId}});
+
+    if (!user) return res.sendStatus(404);
+
+    return res.status(200).json({user});
+};
 
 const validateStudent = async (req, res) => {
     const {username, gender, placeOfBirth, birthDay, noHp, email, nisn, studyAt, province} = req.body;
@@ -44,4 +55,4 @@ const validateStudent = async (req, res) => {
     }
 };
 
-module.exports = {validateStudent};
+module.exports = {validateStudent, getProfile};
