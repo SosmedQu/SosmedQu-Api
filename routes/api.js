@@ -139,9 +139,12 @@ router.post("/posts", verifyToken, postUpload.array("postFiles"), [check("captio
 router.get("/posts/edit/:id", verifyToken, postController.editPost);
 router.put("/posts", verifyToken, postUpload.array("postFiles"), postController.updatePost);
 router.delete("/posts", verifyToken, postController.deletePost);
+router.get("/posts/:id", verifyToken, postController.postDetail);
 //? END OF ENDPOINT OF API POSTS
 
 //? ENDPOINT API EBOOKS
+router.get("/ebooks", ebookController.getAllEbooks);
+router.get("/ebooks/:id", ebookController.ebookDetail);
 router.post(
     "/ebooks",
     ebookUpload.fields([

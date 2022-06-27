@@ -24,6 +24,31 @@ const getAllPosts = async (req, res) => {
     }
 };
 
+const postDetail = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const post = await Post.findOne({
+            where: {id},
+            include: [
+                {
+                    model: PostCategory,
+                },
+                {
+                    model: User,
+                    attributes: ["username"],
+                },
+            ],
+        });
+
+        const postFile = await PostFile.findOne({where: {postId: id}});
+        return res.status(200).json({post, postFile});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+
 const createPost = async (req, res) => {
     const {caption, privacy, categoryId} = req.body;
     const decoded = jwt_decode(req.cookies.accessToken);
@@ -86,38 +111,43 @@ const updatePost = async (req, res) => {
         return res.status(400).json({errors: errors.array()});
     }
 
-    if (req.files.length != 0) {
-        if (oldFiles) {
-            await PostFile.destroy({
+    try {
+        if (req.files.length != 0) {
+            if (oldFiles) {
+                await PostFile.destroy({
+                    where: {
+                        postId: id,
+                    },
+                });
+
+                oldFiles.forEach(async (file) => {
+                    fs.unlinkSync(`images/posts/${file}`);
+                });
+
+                req.files.forEach((file) => {
+                    PostFile.create({postId: id, fileName: file.filename});
+                });
+            } else {
+                req.files.forEach((file) => {
+                    PostFile.create({postId: id, fileName: file.filename});
+                });
+            }
+        }
+
+        await Post.update(
+            {caption, privacy, categoryId},
+            {
                 where: {
-                    postId: id,
+                    id,
                 },
-            });
+            }
+        );
 
-            oldFiles.forEach(async (file) => {
-                fs.unlinkSync(`images/posts/${file}`);
-            });
-
-            req.files.forEach((file) => {
-                PostFile.create({postId: id, fileName: file.filename});
-            });
-        } else {
-            req.files.forEach((file) => {
-                PostFile.create({postId: id, fileName: file.filename});
-            });
-        }
+        return res.status(200).json({msg: "Berhasil update"});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
-
-    await Post.update(
-        {caption, privacy, categoryId},
-        {
-            where: {
-                id,
-            },
-        }
-    );
-
-    return res.status(200).json({msg: "Berhasil update"});
 };
 
 const deletePost = async (req, res) => {
@@ -149,4 +179,4 @@ const deletePost = async (req, res) => {
     }
 };
 
-module.exports = {getAllPosts, createPost, updatePost, deletePost, editPost};
+module.exports = {getAllPosts, createPost, updatePost, deletePost, editPost, postDetail};

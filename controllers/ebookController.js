@@ -1,7 +1,29 @@
 const {validationResult} = require("express-validator");
-const {User, Ebook} = require("../models");
+const {User, Ebook, EbookCategory} = require("../models");
 const jwt_decode = require("jwt-decode");
 const fs = require("fs");
+
+const getAllEbooks = async (req, res) => {
+    try {
+        const ebooks = await Ebook.findAll({
+            include: [
+                {
+                    model: EbookCategory,
+                },
+                {
+                    model: User,
+                    attributes: ["username"],
+                },
+            ],
+        });
+
+        return res.status(200).json({ebooks});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+const ebookDetail = async (req, res) => {};
 
 const createEbook = async (req, res) => {
     const {categoryId, name, description, writer, publisher, publicationYear, isbn} = req.body;
@@ -32,4 +54,8 @@ const createEbook = async (req, res) => {
     return res.status(200).json({msg: "Ebook berhasil diupload"});
 };
 
-module.exports = {createEbook};
+const updateEbook = async (req, res) => {};
+
+const deleteEbook = async (req, res) => {};
+
+module.exports = {getAllEbooks, ebookDetail, createEbook, updateEbook, deleteEbook};
