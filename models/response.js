@@ -11,8 +11,7 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
             },
             response: {
-                type: Sequelize.ENUM,
-                values: ["like", "dislike"],
+                type: Sequelize.STRING,
             },
             createdAt: {
                 allowNull: false,

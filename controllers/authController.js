@@ -40,9 +40,15 @@ const register = async (req, res) => {
                 transporter.sendMail(mailOptions, async (err, info) => {
                     if (err) return res.status(400).json({msg: "Gagal mengirim email"});
 
+                    await UserToken.destroy({
+                        where: {
+                            email: email,
+                        },
+                    });
+
                     const userToken = await UserToken.create({email: email, token: token});
 
-                    return res.status(200).json({msg: "Verifikasi Berhasil Dikirim ke Email Anda"});
+                    return res.status(200).json({msg: `Verifikasi Berhasil Dikirim ke ${email}`});
                 });
             }
         }
@@ -65,6 +71,7 @@ const register = async (req, res) => {
         });
     } catch (err) {
         console.log(err);
+        return res.sendStatus(500);
     }
 };
 
@@ -73,24 +80,34 @@ const verifyAccount = async (req, res) => {
 
     if (!token || !email) return res.sendStatus(404);
 
-    const checkUserToken = await UserToken.findOne({where: {email: email}});
+    try {
+        const checkUserToken = await UserToken.findOne({where: {email: email}});
 
-    if (!checkUserToken) {
-        return res.status(404).json({msg: "Email tidak ditemukan"});
+        if (!checkUserToken) {
+            return res.status(404).json({msg: "Email tidak ditemukan"});
+        }
+
+        if (checkUserToken.token !== token) {
+            return res.status(400).json({msg: "token salah"});
+        }
+
+        const user = User.findOne({where: {email}});
+
+        if (!user) {
+            await User.create({email: email, statusId: 1, roleId: 3});
+        }
+
+        await UserToken.destroy({
+            where: {
+                email: email,
+            },
+        });
+
+        return res.status(200).json({msg: "Email telah diverifikasi"});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
-
-    if (checkUserToken.token !== token) {
-        return res.status(400).json({msg: "token salah"});
-    }
-
-    const user = await User.create({email: email, statusId: 1, roleId: 3});
-    await UserToken.destroy({
-        where: {
-            email: email,
-        },
-    });
-
-    return res.status(200).json({msg: "Email telah diverifikasi"});
 };
 
 const resendEmail = async (req, res) => {
@@ -103,22 +120,27 @@ const resendEmail = async (req, res) => {
         html: `Click this link to verify your account : <a href="${link}?email=${email}&token=${token}">Activate</a>`,
     };
 
-    const checkUserToken = await UserToken.findOne({where: {email: email}});
-    if (checkUserToken) {
-        await UserToken.destroy({
-            where: {
-                email: email,
-            },
+    try {
+        const checkUserToken = await UserToken.findOne({where: {email: email}});
+        if (checkUserToken) {
+            await UserToken.destroy({
+                where: {
+                    email: email,
+                },
+            });
+        }
+
+        transporter.sendMail(mailOptions, async (err, info) => {
+            if (err) return res.status(400).json({msg: "Gagal mengirim email"});
+
+            const userToken = await UserToken.create({email: email, token: token});
+
+            return res.status(200).json({msg: "Verifikasi Berhasil Dikirim ke Email Anda"});
         });
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
-
-    transporter.sendMail(mailOptions, async (err, info) => {
-        if (err) return res.status(400).json({msg: "Gagal mengirim email"});
-
-        const userToken = await UserToken.create({email: email, token: token});
-
-        return res.status(200).json({msg: "Verifikasi Berhasil Dikirim ke Email Anda"});
-    });
 };
 
 const createPassword = async (req, res) => {
@@ -152,6 +174,7 @@ const createPassword = async (req, res) => {
         return res.status(200).json({msg: "Password berhasil dibuat", accessToken: accessToken});
     } catch (err) {
         console.log(err);
+        return res.sendStatus(500);
     }
 };
 
@@ -190,6 +213,7 @@ const login = async (req, res) => {
         return res.status(200).json({msg: "Berhasil login", accessToken});
     } catch (err) {
         console.log(err);
+        return res.sendStatus(500);
     }
 };
 
@@ -229,6 +253,7 @@ const forgotPassword = async (req, res) => {
         }
     } catch (err) {
         console.log(err);
+        return res.sendStatus(500);
     }
 };
 
@@ -237,23 +262,28 @@ const resetPassword = async (req, res) => {
 
     if (!token || !email) return res.sendStatus(404);
 
-    const checkUserToken = await UserToken.findOne({where: {email: email}});
+    try {
+        const checkUserToken = await UserToken.findOne({where: {email: email}});
 
-    if (!checkUserToken) {
-        return res.status(404).json({msg: "Email tidak ditemukan"});
+        if (!checkUserToken) {
+            return res.status(404).json({msg: "Email tidak ditemukan"});
+        }
+
+        if (checkUserToken.token !== token) {
+            return res.status(400).json({msg: "token tidak valid"});
+        }
+
+        await UserToken.destroy({
+            where: {
+                email: email,
+            },
+        });
+
+        return res.status(200).json({success: true});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
-
-    if (checkUserToken.token !== token) {
-        return res.status(400).json({msg: "token tidak valid"});
-    }
-
-    await UserToken.destroy({
-        where: {
-            email: email,
-        },
-    });
-
-    return res.status(200).json({success: true});
 };
 
 const changePassword = async (req, res) => {
@@ -280,6 +310,7 @@ const changePassword = async (req, res) => {
         return res.status(200).json({msg: "Password berhasil dibuat"});
     } catch (err) {
         console.log(err);
+        return res.sendStatus(500);
     }
 };
 
@@ -304,6 +335,7 @@ const logout = async (req, res) => {
         return res.status(200).json({msg: "Berhasil logout"});
     } catch (err) {
         console.log(err);
+        return res.sendStatus(500);
     }
 };
 

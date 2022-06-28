@@ -23,8 +23,8 @@ module.exports = {
                 type: Sequelize.TEXT,
             },
             privacy: {
-                type: Sequelize.ENUM,
-                values: ["private, public, friends"],
+                type: Sequelize.STRING,
+                defaultValue: "public",
             },
             createdAt: {
                 allowNull: false,
