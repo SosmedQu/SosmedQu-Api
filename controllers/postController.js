@@ -77,7 +77,7 @@ const createPost = async (req, res) => {
             });
         }
 
-        return res.status(200).json({success: true});
+        return res.status(200).json({msg: "Postingan Berhasil Dibuat"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -162,17 +162,19 @@ const deletePost = async (req, res) => {
 
         const postFiles = await PostFile.findAll({where: {postId: id}});
 
-        postFiles.forEach((file) => {
-            fs.unlinkSync(`images/posts/${file.fileName}`);
-        });
+        if (postFiles) {
+            postFiles.forEach((file) => {
+                fs.unlinkSync(`images/posts/${file.fileName}`);
+            });
 
-        await PostFile.destroy({
-            where: {
-                postId: id,
-            },
-        });
+            await PostFile.destroy({
+                where: {
+                    postId: id,
+                },
+            });
+        }
 
-        return res.status(200).json({success: true});
+        return res.status(200).json({msg: "Postingan Berhasil Dihapus"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);

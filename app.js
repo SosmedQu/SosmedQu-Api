@@ -10,6 +10,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const apiDoc = require("./apidocs.json");
 
+app.use(express.static("images"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiDoc));
 app.use(cookieParser());
 app.use(cors({credentials: true, origin: "http://localhost:8100"}));

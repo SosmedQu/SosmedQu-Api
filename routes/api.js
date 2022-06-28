@@ -144,7 +144,6 @@ router.get("/posts/:id", verifyToken, postController.postDetail);
 
 //? ENDPOINT API EBOOKS
 router.get("/ebooks", ebookController.getAllEbooks);
-router.get("/ebooks/:id", ebookController.ebookDetail);
 router.post(
     "/ebooks",
     ebookUpload.fields([
@@ -165,5 +164,19 @@ router.post(
     ],
     ebookController.createEbook
 );
-
+router.put(
+    "/ebooks",
+    ebookUpload.fields([
+        {
+            name: "ebookImage",
+        },
+        {
+            name: "ebookFile",
+        },
+    ]),
+    [check("name", "Nama ebook harus diisi").exists().trim().isLength({min: 1})],
+    ebookController.updateEbook
+);
+router.delete("/ebooks", ebookController.deleteEbook);
+router.get("/ebooks/:id", ebookController.ebookDetail);
 module.exports = router;
