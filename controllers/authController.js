@@ -170,9 +170,7 @@ const createPassword = async (req, res) => {
             },
         });
 
-        res.cookie("accessToken", accessToken, {
-            httpOnly: true,
-        });
+        res.cookie("accessToken", accessToken);
 
         return res.status(200).json({msg: "Password berhasil dibuat", accessToken: accessToken});
     } catch (err) {
@@ -209,9 +207,7 @@ const login = async (req, res) => {
             }
         );
 
-        res.cookie("accessToken", accessToken, {
-            httpOnly: true,
-        });
+        res.cookie("accessToken", accessToken);
 
         return res.status(200).json({msg: "Berhasil login", accessToken});
     } catch (err) {
