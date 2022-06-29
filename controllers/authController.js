@@ -96,14 +96,9 @@ const verifyAccount = async (req, res) => {
         if (!user) {
             const createUser = await User.create({email: email, statusId: 1, roleId: 3});
             if (!createUser) {
-                return res.sendStatus(400);
+                return res.sendStatus(500);
             }
         }
-        await UserToken.destroy({
-            where: {
-                email: email,
-            },
-        });
 
         return res.status(200).json({msg: "Email telah diverifikasi"});
     } catch (err) {
@@ -168,6 +163,12 @@ const createPassword = async (req, res) => {
                 },
             }
         );
+
+        await UserToken.destroy({
+            where: {
+                email: email,
+            },
+        });
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
