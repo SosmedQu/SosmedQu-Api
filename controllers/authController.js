@@ -91,12 +91,14 @@ const verifyAccount = async (req, res) => {
             return res.status(400).json({msg: "token salah"});
         }
 
-        const user = User.findOne({where: {email}});
+        const user = await User.findOne({where: {email: email}});
 
         if (!user) {
-            await User.create({email: email, statusId: 1, roleId: 3});
+            const createUser = await User.create({email: email, statusId: 1, roleId: 3});
+            if (!createUser) {
+                return res.sendStatus(400);
+            }
         }
-
         await UserToken.destroy({
             where: {
                 email: email,
