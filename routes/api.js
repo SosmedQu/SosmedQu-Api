@@ -89,7 +89,7 @@ router.post("/auth/logout", verifyToken, authController.logout);
 //? END OF ENDPOINT API OF AUTHENTICATION
 
 //? ENDPOINT API PROFILE
-router.get("/profile", profileController.getProfile);
+router.get("/profile", verifyToken, profileController.getProfile);
 router.post(
     "/profile/validateStudent",
     verifyToken,

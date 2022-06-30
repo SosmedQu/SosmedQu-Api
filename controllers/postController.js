@@ -12,12 +12,16 @@ const getAllPosts = async (req, res) => {
                 },
                 {
                     model: User,
+                    attributes: ["username"],
+                },
+                {
+                    model: PostFile,
                 },
             ],
+            order: [["id", "ASC"]],
         });
 
-        const postFiles = await PostFile.findAll();
-        return res.status(200).json({posts, postFiles});
+        return res.status(200).json({posts});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
