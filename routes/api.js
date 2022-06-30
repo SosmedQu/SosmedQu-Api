@@ -89,7 +89,7 @@ router.post("/auth/logout", verifyToken, authController.logout);
 //? END OF ENDPOINT API OF AUTHENTICATION
 
 //? ENDPOINT API PROFILE
-router.get("/profile", verifyToken, profileController.getProfile);
+router.get("/profile", profileController.getProfile);
 router.post(
     "/profile/validateStudent",
     verifyToken,
@@ -134,7 +134,7 @@ router.post(
 //? END OF ENDPOINT OF API PROFILE
 
 //? ENDPOINT API POSTS
-router.get("/posts", verifyToken, postController.getAllPosts);
+router.get("/posts", postController.getAllPosts);
 router.post("/posts", verifyToken, postUpload.array("postFiles"), [check("caption", "Caption harus diisi").exists().trim().isLength({min: 1})], postController.createPost);
 router.get("/posts/edit/:id", verifyToken, postController.editPost);
 router.put("/posts", verifyToken, postUpload.array("postFiles"), postController.updatePost);

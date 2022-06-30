@@ -42,11 +42,12 @@ const postDetail = async (req, res) => {
                     model: User,
                     attributes: ["username"],
                 },
+                {
+                    model: PostFile,
+                },
             ],
         });
-
-        const postFile = await PostFile.findOne({where: {postId: id}});
-        return res.status(200).json({post, postFile});
+        return res.status(200).json({post});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
