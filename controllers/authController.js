@@ -1,7 +1,7 @@
 require("dotenv").config();
 const {validationResult} = require("express-validator");
 const nodemailer = require("nodemailer");
-const {UserToken, User} = require("../models");
+const {UserToken, User, Role} = require("../models");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -152,8 +152,15 @@ const createPassword = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     try {
-        const user = await User.findOne({where: {email}});
-        const accessToken = jwt.sign({userId: user.id, username: user.username, email: user.email}, process.env.ACCESS_TOKEN_SECRET);
+        const user = await User.findOne({
+            where: {email},
+            include: [
+                {
+                    model: Role,
+                },
+            ],
+        });
+        const accessToken = jwt.sign({userId: user.id, username: user.username, email: user.email, role: user.Role.roleName}, process.env.ACCESS_TOKEN_SECRET);
 
         await User.update(
             {password: hashPassword, username, accessToken},
@@ -188,7 +195,14 @@ const login = async (req, res) => {
     }
 
     try {
-        const user = await User.findOne({where: {email}});
+        const user = await User.findOne({
+            where: {email},
+            include: [
+                {
+                    model: Role,
+                },
+            ],
+        });
 
         if (!user) return res.status(404).json({msg: "Email / password salah"});
 
@@ -196,7 +210,7 @@ const login = async (req, res) => {
 
         if (!match) return res.status(400).json({msg: "Email / password salah"});
 
-        const accessToken = jwt.sign({userId: user.id, username: user.username, email}, process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = jwt.sign({userId: user.id, username: user.username, email, role: user.Role.roleName}, process.env.ACCESS_TOKEN_SECRET);
 
         await User.update(
             {accessToken},

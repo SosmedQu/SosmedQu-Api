@@ -3,13 +3,14 @@ const authController = require("../controllers/authController");
 const profileController = require("../controllers/profileController");
 const postController = require("../controllers/postController");
 const ebookController = require("../controllers/ebookController");
+const subjectController = require("../controllers/subjectController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
 const router = express.Router();
 const multer = require("multer");
 const profileFilesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "./images/profiles");
+        cb(null, "./public/images/profiles");
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + "_" + file.originalname);
@@ -20,7 +21,7 @@ const profileUpload = multer({
 });
 const postFilesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "./pubic/images/posts");
+        cb(null, "./public/images/posts");
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + "_" + file.originalname);
@@ -165,6 +166,7 @@ router.post(
     ],
     ebookController.createEbook
 );
+router.get("/ebooks/edit/:id", verifyToken, ebookController.editEbook);
 router.put(
     "/ebooks",
     verifyToken,
@@ -181,6 +183,25 @@ router.put(
 );
 router.delete("/ebooks", verifyToken, ebookController.deleteEbook);
 router.get("/ebooks/:id", verifyToken, ebookController.ebookDetail);
-//? END OF ENDPOINT OF API POSTS
+//? END OF ENDPOINT OF API EBOOKS
+
+//? ENDPOINT API SUBJECTS
+router.get("/subjects", verifyToken, subjectController.getSubjects);
+router.post(
+    "/subjects",
+    verifyToken,
+    [
+        check("subject", "Mata pelajaran atau matkul harus diisi").exists().trim().isLength({min: 1}),
+        check("day", "Hari harus diisi").exists().trim().isLength({min: 1}),
+        check("hour", "Jam harus diisi").exists().trim().isLength({min: 1}),
+        check("teacher", "Nama guru atau dosen harus diisi").exists().trim().isLength({min: 1}),
+        check("class", "Kelas harus diisi").exists().trim().isLength({min: 1}),
+        check("semester", "Semester harus diisi").exists().trim().isLength({min: 1}),
+    ],
+    subjectController.createSubject
+);
+router.get("/subjects/edit/:id", verifyToken, subjectController.editSubject);
+router.put("/subjects", verifyToken, subjectController.updateSubject);
+router.delete("/subjects", verifyToken, subjectController.deleteSubject);
 
 module.exports = router;
