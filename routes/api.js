@@ -20,7 +20,7 @@ const profileUpload = multer({
 });
 const postFilesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "./images/posts");
+        cb(null, "./pubic/images/posts");
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + "_" + file.originalname);
@@ -33,10 +33,10 @@ const ebookStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         if (file.fieldname === "ebookImage") {
             // if uploading resume
-            cb(null, "./ebooks/images");
+            cb(null, "./public/ebooks/images");
         } else {
             // else uploading image
-            cb(null, "./ebooks/files");
+            cb(null, "./public/ebooks/files");
         }
     },
     filename: (req, file, cb) => {
@@ -146,6 +146,7 @@ router.get("/posts/:id", verifyToken, postController.postDetail);
 router.get("/ebooks", ebookController.getAllEbooks);
 router.post(
     "/ebooks",
+    verifyToken,
     ebookUpload.fields([
         {
             name: "ebookImage",
@@ -166,6 +167,7 @@ router.post(
 );
 router.put(
     "/ebooks",
+    verifyToken,
     ebookUpload.fields([
         {
             name: "ebookImage",
@@ -177,6 +179,8 @@ router.put(
     [check("name", "Nama ebook harus diisi").exists().trim().isLength({min: 1})],
     ebookController.updateEbook
 );
-router.delete("/ebooks", ebookController.deleteEbook);
-router.get("/ebooks/:id", ebookController.ebookDetail);
+router.delete("/ebooks", verifyToken, ebookController.deleteEbook);
+router.get("/ebooks/:id", verifyToken, ebookController.ebookDetail);
+//? END OF ENDPOINT OF API POSTS
+
 module.exports = router;

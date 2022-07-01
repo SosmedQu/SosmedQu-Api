@@ -126,7 +126,7 @@ const updatePost = async (req, res) => {
                 });
 
                 oldFiles.forEach(async (file) => {
-                    fs.unlinkSync(`images/posts/${file}`);
+                    fs.unlinkSync(`public/images/posts/${file}`);
                 });
 
                 req.files.forEach((file) => {
@@ -169,7 +169,7 @@ const deletePost = async (req, res) => {
 
         if (postFiles) {
             postFiles.forEach((file) => {
-                fs.unlinkSync(`images/posts/${file.fileName}`);
+                fs.unlinkSync(`public/images/posts/${file.fileName}`);
             });
 
             await PostFile.destroy({

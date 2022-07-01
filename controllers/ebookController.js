@@ -106,7 +106,7 @@ const updateEbook = async (req, res) => {
         if (Object.getOwnPropertyNames(req.files).length != 0) {
             if (req.files.ebookImage) {
                 if (oldImage != "default.jpg") {
-                    fs.unlinkSync(`ebooks/images/${oldImage}`);
+                    fs.unlinkSync(`public/ebooks/images/${oldImage}`);
                     await Ebook.update(
                         {image: req.files.ebookImage[0].filename},
                         {
@@ -127,7 +127,7 @@ const updateEbook = async (req, res) => {
             }
 
             if (req.files.ebookFile) {
-                fs.unlinkSync(`ebooks/files/${oldFile}`);
+                fs.unlinkSync(`public/ebooks/files/${oldFile}`);
                 await Ebook.update(
                     {fileName: req.files.ebookFile[0].filename},
                     {
@@ -157,7 +157,6 @@ const updateEbook = async (req, res) => {
 
 const deleteEbook = async (req, res) => {
     const {id} = req.body;
-    console.log(req.body);
 
     try {
         const ebook = await Ebook.findOne({where: {id}, attributes: ["image", "fileName"]});
@@ -167,10 +166,10 @@ const deleteEbook = async (req, res) => {
             },
         });
         if (ebook.image != "default.jpg") {
-            fs.unlinkSync(`ebooks/images/${ebook.image}`);
+            fs.unlinkSync(`public/ebooks/images/${ebook.image}`);
         }
 
-        fs.unlinkSync(`ebooks/files/${ebook.fileName}`);
+        fs.unlinkSync(`public/ebooks/files/${ebook.fileName}`);
 
         return res.status(200).json({msg: "Ebook Berhasil Dihapus"});
     } catch (err) {
