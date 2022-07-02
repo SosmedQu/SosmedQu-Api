@@ -47,6 +47,17 @@ const ebookStorage = multer.diskStorage({
 const ebookUpload = multer({
     storage: ebookStorage,
 });
+const subjectFilesStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/images/subjects");
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "_" + file.originalname);
+    },
+});
+const subjectUpload = multer({
+    storage: subjectFilesStorage,
+});
 
 //? ENDPOINT API AUTHENTICATION
 router.post("/auth/register", [check("email", "Email tidak boleh kosong").trim().isLength({min: 1}), check("email", "Email tidak valid").isEmail()], authController.register);
@@ -190,7 +201,24 @@ router.get("/subjects", verifyToken, subjectController.getSubjects);
 router.post(
     "/subjects",
     verifyToken,
+    subjectUpload.single("subjectImage"),
     [
+        check("subjectImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
+                    throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+                }
+            }
+            return true;
+        }),
+        check("subjectImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.size > 5000000) {
+                    throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 5 Mb");
+                }
+            }
+            return true;
+        }),
         check("subject", "Mata pelajaran atau matkul harus diisi").exists().trim().isLength({min: 1}),
         check("day", "Hari harus diisi").exists().trim().isLength({min: 1}),
         check("hour", "Jam harus diisi").exists().trim().isLength({min: 1}),
@@ -201,7 +229,36 @@ router.post(
     subjectController.createSubject
 );
 router.get("/subjects/edit/:id", verifyToken, subjectController.editSubject);
-router.put("/subjects", verifyToken, subjectController.updateSubject);
+router.put(
+    "/subjects",
+    verifyToken,
+    subjectUpload.single("subjectImage"),
+    [
+        check("subjectImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
+                    throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+                }
+            }
+            return true;
+        }),
+        check("subjectImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.size > 5000000) {
+                    throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 5 Mb");
+                }
+            }
+            return true;
+        }),
+        check("subject", "Mata pelajaran atau matkul harus diisi").exists().trim().isLength({min: 1}),
+        check("day", "Hari harus diisi").exists().trim().isLength({min: 1}),
+        check("hour", "Jam harus diisi").exists().trim().isLength({min: 1}),
+        check("teacher", "Nama guru atau dosen harus diisi").exists().trim().isLength({min: 1}),
+        check("class", "Kelas harus diisi").exists().trim().isLength({min: 1}),
+        check("semester", "Semester harus diisi").exists().trim().isLength({min: 1}),
+    ],
+    subjectController.updateSubject
+);
 router.delete("/subjects", verifyToken, subjectController.deleteSubject);
 
 module.exports = router;
