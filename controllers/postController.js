@@ -6,19 +6,22 @@ const fs = require("fs");
 const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({
+            where: {
+                privacy: "public",
+            },
             include: [
                 {
                     model: PostCategory,
                 },
                 {
                     model: User,
-                    attributes: ["username"],
+                    attributes: ["id", "username"],
                 },
                 {
                     model: PostFile,
                 },
             ],
-            order: [["id", "ASC"]],
+            order: [["id", "DESC"]],
         });
 
         return res.status(200).json({posts});
@@ -40,13 +43,18 @@ const postDetail = async (req, res) => {
                 },
                 {
                     model: User,
-                    attributes: ["username"],
+                    attributes: ["id", "username"],
                 },
                 {
                     model: PostFile,
                 },
             ],
         });
+
+        if (!post) {
+            return res.status(404).json({msg: "Post Not Found"});
+        }
+
         return res.status(200).json({post});
     } catch (err) {
         console.log(err);
@@ -58,6 +66,7 @@ const createPost = async (req, res) => {
     const {caption, privacy, categoryId} = req.body;
     const decoded = jwt_decode(req.cookies.accessToken);
     const errors = validationResult(req);
+    const user = await User.findOne({where: {id: decoded.userId}});
 
     if (!errors.isEmpty()) {
         if (req.files) {
@@ -66,6 +75,15 @@ const createPost = async (req, res) => {
             });
         }
         return res.status(400).json({errors: errors.array()});
+    }
+
+    if (!user || user.statusId == 0 || user.roleId == 3) {
+        if (req.files) {
+            req.files.forEach(function (file) {
+                fs.unlinkSync(file.path);
+            });
+        }
+        return res.status(401).json({msg: "Unauthorized"});
     }
 
     try {
@@ -82,21 +100,7 @@ const createPost = async (req, res) => {
             });
         }
 
-        return res.status(200).json({msg: "Postingan Berhasil Dibuat"});
-    } catch (err) {
-        console.log(err);
-        return res.sendStatus(500);
-    }
-};
-
-const editPost = async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        const post = await Post.findOne({where: {id}});
-        const postFiles = await PostFile.findAll({where: {postId: id}});
-
-        return res.status(200).json({post, postFiles});
+        return res.status(201).json({msg: "Postingan Berhasil Dibuat"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -148,7 +152,7 @@ const updatePost = async (req, res) => {
             }
         );
 
-        return res.status(200).json({msg: "Berhasil update"});
+        return res.status(201).json({msg: "Berhasil update"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -156,9 +160,15 @@ const updatePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-    const {id} = req.body;
+    const id = req.params.id;
+    const decoded = jwt_decode(req.cookies.accessToken);
 
     try {
+        const post = await Post.findOne({where: {id}});
+        if (post.userId != decoded.userId) {
+            return res.status(403).json({msg: "Forbiden"});
+        }
+
         await Post.destroy({
             where: {
                 id,
@@ -186,4 +196,4 @@ const deletePost = async (req, res) => {
     }
 };
 
-module.exports = {getAllPosts, createPost, updatePost, deletePost, editPost, postDetail};
+module.exports = {getAllPosts, createPost, updatePost, deletePost, postDetail};

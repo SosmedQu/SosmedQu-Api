@@ -1,6 +1,6 @@
 require("dotenv").config();
 const {validationResult} = require("express-validator");
-const {User} = require("../models");
+const {User, Post, PostCategory, PostFile} = require("../models");
 const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 
@@ -12,6 +12,38 @@ const getProfile = async (req, res) => {
     if (!user) return res.sendStatus(404);
 
     return res.status(200).json({user});
+};
+
+const getAllPost = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const posts = await Post.findAll({
+            where: {userId: id},
+            include: [
+                {
+                    model: PostCategory,
+                },
+                {
+                    model: User,
+                    attributes: ["id", "username"],
+                },
+                {
+                    model: PostFile,
+                },
+            ],
+            order: [["id", "DESC"]],
+        });
+
+        if (posts.length == 0) {
+            return res.status(404).json({msg: "Tidak ada postingan"});
+        }
+
+        return res.status(200).json({posts});
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
 };
 
 const validateStudent = async (req, res) => {
@@ -55,4 +87,4 @@ const validateStudent = async (req, res) => {
     }
 };
 
-module.exports = {validateStudent, getProfile};
+module.exports = {validateStudent, getProfile, getAllPost};

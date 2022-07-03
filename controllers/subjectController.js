@@ -94,7 +94,7 @@ const updateSubject = async (req, res) => {
     }
 
     await LessonTimetable.update(
-        {image: req.file.filename || "default.jpg", subject, day, hour, teacher, class: kelas, semester},
+        {image: req.file?.filename || "default.jpg", subject, day, hour, teacher, class: kelas, semester},
         {
             where: {
                 id,
