@@ -1,6 +1,6 @@
 require("dotenv").config();
 const {validationResult} = require("express-validator");
-const {User, Post, PostCategory, PostFile} = require("../models");
+const {User} = require("../models");
 const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 
@@ -87,4 +87,49 @@ const validateStudent = async (req, res) => {
     }
 };
 
-module.exports = {validateStudent, getProfile, getAllPost};
+const updateGeneral = async (req, res) => {
+    const {username, oldImage} = req.body;
+    const decoded = jwt_decode(req.cookies.accessToken);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
+        return res.status(400).json({errors: errors.array()});
+    }
+
+    try {
+        if (req.file) {
+            if (oldImage != "default.jpg") {
+                fs.unlinkSync(`public/images/profiles/${oldImage}`);
+            }
+            await User.update(
+                {image: req.file.filename},
+                {
+                    where: {
+                        id: decoded.userId,
+                    },
+                }
+            );
+        }
+
+        await User.update(
+            {username},
+            {
+                where: {
+                    id: decoded.userId,
+                },
+            }
+        );
+
+        return res.status(201).json({msg: "Profile berhasil diupdate"});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+
+const updateStudent = async (req, res) => {};
+
+module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent};

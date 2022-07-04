@@ -6,9 +6,6 @@ const fs = require("fs");
 const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({
-            where: {
-                privacy: "public",
-            },
             include: [
                 {
                     model: PostCategory,

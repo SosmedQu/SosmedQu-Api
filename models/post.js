@@ -58,6 +58,10 @@ module.exports = (sequelize, Sequelize) => {
             statusId: {
                 type: Sequelize.INTEGER,
             },
+            image: {
+                type: Sequelize.STRING,
+                defaultValue: "default.jpg",
+            },
             username: {
                 type: Sequelize.STRING,
             },
@@ -129,7 +133,7 @@ module.exports = (sequelize, Sequelize) => {
             tableName: "post_categories",
         }
     );
-     const PostFile = sequelize.define(
+    const PostFile = sequelize.define(
         "PostFile",
         {
             id: {

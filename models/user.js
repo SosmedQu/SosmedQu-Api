@@ -14,6 +14,10 @@ module.exports = (sequelize, Sequelize) => {
             statusId: {
                 type: Sequelize.INTEGER,
             },
+            image: {
+                type: Sequelize.STRING,
+                defaultValue: "default.jpg",
+            },
             username: {
                 type: Sequelize.STRING,
             },

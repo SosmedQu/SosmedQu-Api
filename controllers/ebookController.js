@@ -107,14 +107,6 @@ const updateEbook = async (req, res) => {
             if (req.files.ebookImage) {
                 if (oldImage != "default.jpg") {
                     fs.unlinkSync(`public/ebooks/images/${oldImage}`);
-                    await Ebook.update(
-                        {image: req.files.ebookImage[0].filename},
-                        {
-                            where: {
-                                id,
-                            },
-                        }
-                    );
                 }
                 await Ebook.update(
                     {image: req.files.ebookImage[0].filename},

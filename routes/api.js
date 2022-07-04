@@ -19,6 +19,17 @@ const profileFilesStorage = multer.diskStorage({
 const profileUpload = multer({
     storage: profileFilesStorage,
 });
+const studentCardStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/images/studentCard");
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "_" + file.originalname);
+    },
+});
+const studentCardUpload = multer({
+    storage: studentCardStorage,
+});
 const postFilesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "./public/images/posts");
@@ -106,7 +117,7 @@ router.get("/profile/posts/:id", profileController.getAllPost);
 router.post(
     "/profile/validateStudent",
     verifyToken,
-    profileUpload.single("studentCard"),
+    studentCardUpload.single("studentCard"),
     [
         check("studentCard").custom((value, {req}) => {
             if (!req.file) {
@@ -144,6 +155,66 @@ router.post(
 
     profileController.validateStudent
 );
+router.put(
+    "/profile/general",
+    verifyToken,
+    profileUpload.single("profileImage"),
+    [
+        check("profileImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
+                    throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+                }
+            }
+            return true;
+        }),
+        check("profileImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.size > 5000000) {
+                    throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 5 Mb");
+                }
+            }
+            return true;
+        }),
+        check("username", "Username harus diisi").exists().trim().isLength({min: 1}),
+    ],
+    profileController.updateGeneral
+);
+router.put(
+    "/profile/student",
+    verifyToken,
+    profileUpload.single("profileImage"),
+    [
+        check("profileImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
+                    throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+                }
+            }
+            return true;
+        }),
+        check("profileImage").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.size > 5000000) {
+                    throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 5 Mb");
+                }
+            }
+            return true;
+        }),
+        check("username", "Username harus diisi").exists().trim().isLength({min: 1}),
+        check("gender", "Jenis kelamin harus diisi").exists().trim().isLength({min: 1}),
+        check("placeOfBirth", "Tempat lahir harus diisi").exists().trim().isLength({min: 1}),
+        check("placeOfBirth", "Tempat lahir harus diisi").exists().trim().isLength({min: 1}),
+        check("birthDay", "Tanggal lahir harus diisi").exists().trim().isLength({min: 1}),
+        check("noHp", "No Handphone harus diisi").exists().trim().isLength({min: 1}),
+        check("noHp", "No Handphone tidak valid").isMobilePhone("id-ID"),
+        check("nisn", "NISN harus diisi").exists().trim().isLength({min: 1}),
+        check("studyAt", "Asal Sekolah / Perguruan tinggi harus diisi").exists().trim().isLength({min: 1}),
+        check("province", "Provinsi harus diisi").exists().trim().isLength({min: 1}),
+    ],
+    profileController.updateStudent
+);
+
 //? END OF ENDPOINT OF API PROFILE
 
 //? ENDPOINT API POSTS
