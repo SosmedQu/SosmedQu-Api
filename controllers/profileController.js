@@ -26,7 +26,7 @@ const getAllPost = async (req, res) => {
                 },
                 {
                     model: User,
-                    attributes: ["id", "username"],
+                    attributes: ["id", "username", "image"],
                 },
                 {
                     model: PostFile,
