@@ -132,6 +132,7 @@ const updateGeneral = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     const {username, gender, placeOfBirth, birthDay, noHp, nisn, studyAt, province, oldImage} = req.body;
+    const decoded = jwt_decode(req.cookies.accessToken);
     const convertBirthDay = new Date(birthDay);
     const errors = validationResult(req);
 
@@ -164,7 +165,6 @@ const updateStudent = async (req, res) => {
                 placeOfBirth,
                 birthDay: convertBirthDay,
                 noHp,
-                studentCard,
                 nisn,
                 studyAt,
                 province,

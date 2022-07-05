@@ -4,6 +4,8 @@ const profileController = require("../controllers/profileController");
 const postController = require("../controllers/postController");
 const ebookController = require("../controllers/ebookController");
 const subjectController = require("../controllers/subjectController");
+const personalNoteController = require("../controllers/personalNoteController");
+const postCategoryController = require("../controllers/postCategoryController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
 const router = express.Router();
@@ -331,5 +333,13 @@ router.put(
     subjectController.updateSubject
 );
 router.delete("/subjects", verifyToken, subjectController.deleteSubject);
+//? END OF ENDPOINT OF API SUBJECTS
+
+//? ENDPOINT API POST CATEGORY
+router.get("/postCategory", postCategoryController.getAllCategories);
+router.post("/postCategory", postCategoryController.createCategory);
+router.put("/postCategory", postCategoryController.updateCategory);
+router.get("/postCategory/:id", postCategoryController.getCategory);
+router.delete("/postCategory/:id", postCategoryController.deleteCategory);
 
 module.exports = router;
