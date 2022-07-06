@@ -5,6 +5,7 @@ const postController = require("../controllers/postController");
 const ebookController = require("../controllers/ebookController");
 const subjectController = require("../controllers/subjectController");
 const personalNoteController = require("../controllers/personalNoteController");
+const schoolController = require("../controllers/schoolController");
 const postCategoryController = require("../controllers/postCategoryController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
@@ -265,7 +266,7 @@ router.put(
     [check("name", "Nama ebook harus diisi").exists().trim().isLength({min: 1})],
     ebookController.updateEbook
 );
-router.delete("/ebooks", verifyToken, ebookController.deleteEbook);
+router.delete("/ebooks/:id", verifyToken, ebookController.deleteEbook);
 router.get("/ebooks/:id", verifyToken, ebookController.ebookDetail);
 //? END OF ENDPOINT OF API EBOOKS
 
@@ -341,5 +342,11 @@ router.post("/postCategory", postCategoryController.createCategory);
 router.put("/postCategory", postCategoryController.updateCategory);
 router.get("/postCategory/:id", postCategoryController.getCategory);
 router.delete("/postCategory/:id", postCategoryController.deleteCategory);
+//? END OF ENDPOINT OF API POST CATEGORY
+
+//? ENDPOINT API SCHOOL
+router.get("/schools", schoolController.getSchool);
+router.post("/schools", schoolController.createSchool);
+//? END OF ENDPOINT OF API SCHOOL
 
 module.exports = router;

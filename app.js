@@ -18,6 +18,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/api", api);
 
-app.listen(process.env.PORT, () => {
-    console.log(`${process.env.APP_NAME} | Listening att http://localhost${process.env.PORT}`);
+app.listen(process.env.API_PORT, () => {
+    console.log(`${process.env.API_NAME} | Listening att http://${process.env.API_HOST}:${process.env.API_PORT}`);
 });

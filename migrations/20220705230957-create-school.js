@@ -1,45 +1,54 @@
 "use strict";
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable("ebooks", {
+        await queryInterface.createTable("schools", {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            userId: {
+            provinceCode: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
             },
-            categoryId: {
+            province: {
+                type: Sequelize.STRING,
+            },
+            districtCode: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
             },
-            name: {
+            district: {
                 type: Sequelize.STRING,
             },
-            image: {
-                type: Sequelize.STRING,
-                defaultValue: "default.jpg",
-            },
-            fileName: {
-                type: Sequelize.STRING,
-            },
-            description: {
-                type: Sequelize.TEXT,
-            },
-            writer: {
-                type: Sequelize.STRING,
-            },
-            publisher: {
-                type: Sequelize.STRING,
-            },
-            publicationYear: {
-                type: Sequelize.STRING,
-            },
-            isbn: {
+            subDistrictCode: {
                 type: Sequelize.INTEGER,
+            },
+            subDistrict: {
+                type: Sequelize.STRING,
+            },
+            schoolId: {
+                type: Sequelize.STRING,
+            },
+            npsn: {
+                type: Sequelize.INTEGER,
+            },
+            school: {
+                type: Sequelize.STRING,
+            },
+            level: {
+                type: Sequelize.STRING,
+            },
+            status: {
+                type: Sequelize.STRING,
+            },
+            streetAddress: {
+                type: Sequelize.STRING,
+            },
+            latitude: {
+                type: Sequelize.DECIMAL(9, 7),
+            },
+            longitude: {
+                type: Sequelize.DECIMAL(10, 7),
             },
             createdAt: {
                 allowNull: false,
@@ -54,6 +63,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable("ebooks");
+        await queryInterface.dropTable("schools");
     },
 };
