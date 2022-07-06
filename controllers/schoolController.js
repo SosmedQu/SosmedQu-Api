@@ -1,11 +1,34 @@
 const {School} = require("../models");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const getSchool = async (req, res) => {
     const level = req.query.jenjang;
+    const school = req.query.sekolah;
 
     try {
+        if (level && school) {
+            const schools = await School.findAll({where: {[Op.and]: [{level}, {school: {[Op.like]: `%${school}%`}}]}});
+
+            if (schools.length == 0) return res.status(404).json({msg: "Not Found"});
+
+            return res.status(200).json({schools});
+        }
+
         if (level) {
             const schools = await School.findAll({where: {level}});
+
+            if (schools.length == 0) return res.status(404).json({msg: "Not Found"});
+
+            return res.status(200).json({schools});
+        }
+
+        if (school) {
+            const schools = await School.findAll({
+                where: {
+                    school: {[Op.like]: `%${school}%`},
+                },
+            });
 
             if (!schools) return res.status(404).json({msg: "Not Found"});
 
