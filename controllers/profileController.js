@@ -1,6 +1,6 @@
 require("dotenv").config();
-const {validationResult} = require("express-validator");
-const {User, Role} = require("../models");
+const { validationResult } = require("express-validator");
+const { User, Role, Post } = require("../models");
 const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 const jwt = require("jsonwebtoken");
@@ -8,11 +8,11 @@ const jwt = require("jsonwebtoken");
 const getProfile = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
 
-    const user = await User.findOne({where: {id: decoded.userId}});
+    const user = await User.findOne({ where: { id: decoded.userId } });
 
     if (!user) return res.sendStatus(404);
 
-    return res.status(200).json({user});
+    return res.status(200).json({ user });
 };
 
 const getAllPost = async (req, res) => {
@@ -20,7 +20,7 @@ const getAllPost = async (req, res) => {
 
     try {
         const posts = await Post.findAll({
-            where: {userId: id},
+            where: { userId: id },
             include: [
                 {
                     model: PostCategory,
@@ -37,10 +37,10 @@ const getAllPost = async (req, res) => {
         });
 
         if (posts.length == 0) {
-            return res.status(404).json({msg: "Tidak ada postingan"});
+            return res.status(404).json({ msg: "Tidak ada postingan" });
         }
 
-        return res.status(200).json({posts});
+        return res.status(200).json({ posts });
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
@@ -48,12 +48,12 @@ const getAllPost = async (req, res) => {
 };
 
 const validateStudent = async (req, res) => {
-    const {username, gender, placeOfBirth, birthDay, noHp, studentCard, email, nisn, studyAt, province} = req.body;
+    const { username, gender, placeOfBirth, birthDay, noHp, studentCard, email, nisn, studyAt, province } = req.body;
     const convertBirthDay = new Date(birthDay);
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
+        return res.status(400).json({ errors: errors.array() });
     }
 
     const regex = /^data:.+\/(.+);base64,(.*)$/;
@@ -86,7 +86,7 @@ const validateStudent = async (req, res) => {
         );
 
         const user = await User.findOne({
-            where: {email},
+            where: { email },
             include: [
                 {
                     model: Role,
@@ -94,11 +94,11 @@ const validateStudent = async (req, res) => {
             ],
         });
 
-        const accessToken = jwt.sign({userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, createdAt: user.createdAt}, process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = jwt.sign({ userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, createdAt: user.createdAt }, process.env.ACCESS_TOKEN_SECRET);
 
         res.cookie("accessToken", accessToken);
 
-        return res.status(200).json({msg: "Validasi siswa berhasil"});
+        return res.status(200).json({ msg: "Validasi siswa berhasil" });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -106,15 +106,16 @@ const validateStudent = async (req, res) => {
 };
 
 const updateGeneral = async (req, res) => {
-    const {username, oldImage} = req.body;
+    const { username, oldImage } = req.body;
     const decoded = jwt_decode(req.cookies.accessToken);
     const errors = validationResult(req);
+    console.log(req.file);
 
     if (!errors.isEmpty()) {
         if (req.file) {
             fs.unlinkSync(req.file.path);
         }
-        return res.status(400).json({errors: errors.array()});
+        return res.status(400).json({ errors: errors.array() });
     }
 
     try {
@@ -123,7 +124,7 @@ const updateGeneral = async (req, res) => {
                 fs.unlinkSync(`public/images/profiles/${oldImage}`);
             }
             await User.update(
-                {image: req.file.filename},
+                { image: req.file.filename },
                 {
                     where: {
                         id: decoded.userId,
@@ -133,7 +134,7 @@ const updateGeneral = async (req, res) => {
         }
 
         await User.update(
-            {username},
+            { username },
             {
                 where: {
                     id: decoded.userId,
@@ -141,7 +142,7 @@ const updateGeneral = async (req, res) => {
             }
         );
 
-        return res.status(201).json({msg: "Profile berhasil diupdate"});
+        return res.status(201).json({ msg: "Profile berhasil diupdate" });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -149,7 +150,7 @@ const updateGeneral = async (req, res) => {
 };
 
 const updateStudent = async (req, res) => {
-    const {username, gender, placeOfBirth, birthDay, noHp, nisn, studyAt, province, oldImage} = req.body;
+    const { username, gender, placeOfBirth, birthDay, noHp, nisn, studyAt, province, oldImage } = req.body;
     const decoded = jwt_decode(req.cookies.accessToken);
     const convertBirthDay = new Date(birthDay);
     const errors = validationResult(req);
@@ -158,7 +159,7 @@ const updateStudent = async (req, res) => {
         if (req.file) {
             fs.unlinkSync(req.file.path);
         }
-        return res.status(400).json({errors: errors.array()});
+        return res.status(400).json({ errors: errors.array() });
     }
 
     try {
@@ -167,7 +168,7 @@ const updateStudent = async (req, res) => {
                 fs.unlinkSync(`public/images/profiles/${oldImage}`);
             }
             await User.update(
-                {image: req.file.filename},
+                { image: req.file.filename },
                 {
                     where: {
                         id: decoded.userId,
@@ -194,7 +195,7 @@ const updateStudent = async (req, res) => {
             }
         );
 
-        return res.status(201).json({msg: "Profile berhasil diupdate"});
+        return res.status(201).json({ msg: "Profile berhasil diupdate" });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -206,4 +207,4 @@ const test = (req, res) => {
     console.log(decoded);
 };
 
-module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent, test};
+module.exports = { validateStudent, getProfile, getAllPost, updateGeneral, updateStudent, test };
