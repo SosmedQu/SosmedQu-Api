@@ -14,8 +14,9 @@ app.use(express.static("public"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiDoc));
 app.use(cookieParser());
 app.use(cors({credentials: true, origin: "http://localhost:8100"}));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.json({limit: "50mb"}));
+app.use(express.urlencoded({limit: "50mb", extended: true}));
+
 app.use("/api", api);
 
 app.listen(process.env.API_PORT, () => {
