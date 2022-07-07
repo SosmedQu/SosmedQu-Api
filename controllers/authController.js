@@ -160,7 +160,7 @@ const createPassword = async (req, res) => {
                 },
             ],
         });
-        const accessToken = jwt.sign({userId: user.id, username: user.username, email: user.email, role: user.Role.roleName}, process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = jwt.sign({userId: user.id, username: user.username, role: user.Role.roleName, createdAt: user.createdAt}, process.env.ACCESS_TOKEN_SECRET);
 
         await User.update(
             {password: hashPassword, username, accessToken},
@@ -210,7 +210,7 @@ const login = async (req, res) => {
 
         if (!match) return res.status(400).json({msg: "Email / password salah"});
 
-        const accessToken = jwt.sign({userId: user.id, username: user.username, email, role: user.Role.roleName}, process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = jwt.sign({userId: user.id, username: user.username, role: user.Role.roleName, createdAt: user.createdAt}, process.env.ACCESS_TOKEN_SECRET);
 
         await User.update(
             {accessToken},
