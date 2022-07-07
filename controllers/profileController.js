@@ -1,6 +1,6 @@
 require("dotenv").config();
 const {validationResult} = require("express-validator");
-const {User, Role, Post} = require("../models");
+const {User, Role, Post, PostCategory, PostFile} = require("../models");
 const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 const jwt = require("jsonwebtoken");
