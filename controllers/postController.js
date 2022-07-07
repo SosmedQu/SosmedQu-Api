@@ -12,7 +12,7 @@ const getAllPosts = async (req, res) => {
                 },
                 {
                     model: User,
-                    attributes: ["id", "username", "image"],
+                    attributes: ["id", "username", "image", "studyAt"],
                 },
                 {
                     model: PostFile,
@@ -40,7 +40,7 @@ const postDetail = async (req, res) => {
                 },
                 {
                     model: User,
-                    attributes: ["id", "username", "image"],
+                    attributes: ["id", "username", "image", "studyAt"],
                 },
                 {
                     model: PostFile,

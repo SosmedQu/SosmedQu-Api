@@ -325,7 +325,7 @@ router.delete("/postCategory/:id", postCategoryController.deleteCategory);
 //? ENDPOINT API SCHOOL
 router.get("/schools", schoolController.getSchool);
 router.post("/schools", schoolController.createSchool);
-router.post("/test", profileController.test);
+// router.get("/test", profileController.test);
 //? END OF ENDPOINT OF API SCHOOL
 
 module.exports = router;
