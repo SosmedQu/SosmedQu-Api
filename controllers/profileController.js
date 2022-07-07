@@ -93,8 +93,19 @@ const validateStudent = async (req, res) => {
                 },
             ],
         });
+        const accessToken = jwt.sign(
+            {userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, studyAt: user.studyAt, createdAt: user.createdAt},
+            process.env.ACCESS_TOKEN_SECRET
+        );
 
-        const accessToken = jwt.sign({userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, createdAt: user.createdAt}, process.env.ACCESS_TOKEN_SECRET);
+        await User.update(
+            {accessToken},
+            {
+                where: {
+                    email,
+                },
+            }
+        );
 
         res.cookie("accessToken", accessToken);
 
@@ -201,9 +212,10 @@ const updateStudent = async (req, res) => {
     }
 };
 
-const test = (req, res) => {
-    const decoded = jwt_decode(req.cookies.accessToken);
-    console.log(decoded);
-};
+// const test = (req, res) => {
+//     console.log(req.cookies.accessToken);
+//     const decoded = jwt_decode(req.cookies.accessToken);
+//     console.log(decoded);
+// };
 
-module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent, test};
+module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent};

@@ -160,7 +160,12 @@ const createPassword = async (req, res) => {
                 },
             ],
         });
-        const accessToken = jwt.sign({userId: user.id, username: user.username, role: user.Role.roleName, createdAt: user.createdAt}, process.env.ACCESS_TOKEN_SECRET);
+
+        const accessToken = jwt.sign(
+            {userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user?.province, gender: user?.gender, studyAt: user?.studyAt, createdAt: user.createdAt},
+            process.env.ACCESS_TOKEN_SECRET
+        );
+        res.cookie("accessToken", accessToken);
 
         await User.update(
             {password: hashPassword, username, accessToken},
@@ -176,8 +181,6 @@ const createPassword = async (req, res) => {
                 email: email,
             },
         });
-
-        res.cookie("accessToken", accessToken);
 
         return res.status(200).json({msg: "Password berhasil dibuat", accessToken: accessToken});
     } catch (err) {
@@ -210,7 +213,11 @@ const login = async (req, res) => {
 
         if (!match) return res.status(400).json({msg: "Email / password salah"});
 
-        const accessToken = jwt.sign({userId: user.id, username: user.username, role: user.Role.roleName, createdAt: user.createdAt}, process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = jwt.sign(
+            {userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user?.province, gender: user?.gender, studyAt: user?.studyAt, createdAt: user.createdAt},
+            process.env.ACCESS_TOKEN_SECRET
+        );
+        res.cookie("accessToken", accessToken);
 
         await User.update(
             {accessToken},
@@ -220,8 +227,6 @@ const login = async (req, res) => {
                 },
             }
         );
-
-        res.cookie("accessToken", accessToken);
 
         return res.status(200).json({msg: "Berhasil login", accessToken});
     } catch (err) {
