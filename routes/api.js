@@ -324,6 +324,14 @@ router.get("/postCategory/:id", postCategoryController.getCategory);
 router.delete("/postCategory/:id", postCategoryController.deleteCategory);
 //? END OF ENDPOINT OF API POST CATEGORY
 
+//? ENDPOINT API EBOOK CATEGORY
+router.get("/ebookCategory", ebookCategoryController.getAllCategories);
+router.post("/ebookCategory", ebookCategoryController.createCategory);
+router.put("/ebookCategory", ebookCategoryController.updateCategory);
+router.get("/ebookCategory/:id", ebookCategoryController.getCategory);
+router.delete("/ebookCategory/:id", ebookCategoryController.deleteCategory);
+//? END OF ENDPOINT OF API EBOOK CATEGORY
+
 //? ENDPOINT API SCHOOL
 router.get("/schools", schoolController.getSchool);
 router.post("/schools", schoolController.createSchool);
