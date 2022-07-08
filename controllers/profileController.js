@@ -5,10 +5,18 @@ const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 const jwt = require("jsonwebtoken");
 
-const getProfile = async (req, res) => {
+const getMyProfile = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
-
     const user = await User.findOne({where: {id: decoded.userId}});
+
+    if (!user) return res.sendStatus(404);
+
+    return res.status(200).json({user});
+};
+
+const getProfile = async (req, res) => {
+    const id = req.params.id;
+    const user = await User.findOne({where: {id}});
 
     if (!user) return res.sendStatus(404);
 
@@ -218,4 +226,4 @@ const updateStudent = async (req, res) => {
 //     console.log(decoded);
 // };
 
-module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent};
+module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent, getMyProfile};
