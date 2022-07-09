@@ -7,6 +7,7 @@ const subjectController = require("../controllers/subjectController");
 const personalNoteController = require("../controllers/personalNoteController");
 const schoolController = require("../controllers/schoolController");
 const postCategoryController = require("../controllers/postCategoryController");
+const ebookCategoryController = require("../controllers/ebookCategoryController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
 const router = express.Router();
@@ -115,7 +116,7 @@ router.post("/auth/logout", verifyToken, authController.logout);
 //? END OF ENDPOINT API OF AUTHENTICATION
 
 //? ENDPOINT API PROFILE
-router.get("/profile", profileController.getProfile);
+router.get("/profile", profileController.getMyProfile);
 router.get("/profile/posts/:id", profileController.getAllPost);
 router.post(
     "/profile/validateStudent",
@@ -195,6 +196,7 @@ router.put(
     ],
     profileController.updateStudent
 );
+router.get("/profile/:id", profileController.getProfile);
 
 //? END OF ENDPOINT OF API PROFILE
 
@@ -322,10 +324,25 @@ router.get("/postCategory/:id", postCategoryController.getCategory);
 router.delete("/postCategory/:id", postCategoryController.deleteCategory);
 //? END OF ENDPOINT OF API POST CATEGORY
 
+//? ENDPOINT API EBOOK CATEGORY
+router.get("/ebookCategory", ebookCategoryController.getAllCategories);
+router.post("/ebookCategory", ebookCategoryController.createCategory);
+router.put("/ebookCategory", ebookCategoryController.updateCategory);
+router.get("/ebookCategory/:id", ebookCategoryController.getCategory);
+router.delete("/ebookCategory/:id", ebookCategoryController.deleteCategory);
+//? END OF ENDPOINT OF API EBOOK CATEGORY
+
 //? ENDPOINT API SCHOOL
 router.get("/schools", schoolController.getSchool);
 router.post("/schools", schoolController.createSchool);
-// router.get("/test", profileController.test);
 //? END OF ENDPOINT OF API SCHOOL
+
+//? ENDPOINT API PERSONAL NOTE
+router.get("/notes", verifyToken, personalNoteController.getAllNotes);
+router.post("/notes", verifyToken, personalNoteController.createNote);
+router.put("/notes", verifyToken, personalNoteController.updateNote);
+router.get("/notes/:id", verifyToken, personalNoteController.getNote);
+router.delete("/notes/:id", verifyToken, personalNoteController.deleteNote);
+//? END OF ENDPOINT OF API PERSONAL NOTE
 
 module.exports = router;

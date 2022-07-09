@@ -50,10 +50,6 @@ const createSchool = async (req, res) => {
     const {provinceCode, province, districtCode, district, subDistrictCode, subDistrict, schoolId, npsn, school, level, status, streetAddress, latitude, longitude} = req.body;
 
     try {
-        // axios.get("https://api-sekolah-indonesia.herokuapp.com/sekolah?page=1&perPage=5").then((response) => {
-        //     const schools = response.data;
-        //     return res.status(200).json({schools});
-        // });
         const checkSchool = await School.findOne({where: {schoolId}});
         if (checkSchool) return res.status(404).json({msg: "Sekolah sudah terdaftar atau terdapat id yang sama"});
         await School.create({

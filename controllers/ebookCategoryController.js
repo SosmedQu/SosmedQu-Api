@@ -1,11 +1,11 @@
 const {validationResult} = require("express-validator");
-const {PostCategory} = require("../models");
+const {EbookCategory} = require("../models");
 
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await PostCategory.findAll();
+        const categories = await EbookCategory.findAll();
 
-        if (!categories) return res.status(404).json({msg: "Not found"});
+        if (categories.length == 0) return res.status(404).json({msg: "Not found"});
 
         return res.status(200).json({categories});
     } catch (err) {
@@ -18,9 +18,9 @@ const createCategory = async (req, res) => {
     const {category} = req.body;
 
     try {
-        await PostCategory.create({category});
+        await EbookCategory.create({category});
 
-        return res.status(200).json({msg: "Kategori postingan berhasil ditambahkan"});
+        return res.status(200).json({msg: "Kategori ebook berhasil ditambahkan"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -31,7 +31,7 @@ const updateCategory = async (req, res) => {
     const {category, id} = req.body;
 
     try {
-        await PostCategory.update(
+        await EbookCategory.update(
             {category},
             {
                 where: {
@@ -40,7 +40,7 @@ const updateCategory = async (req, res) => {
             }
         );
 
-        return res.status(200).json({msg: "Kategori postingan berhasil diupdate"});
+        return res.status(200).json({msg: "Kategori ebook berhasil diupdate"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -51,7 +51,7 @@ const getCategory = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const category = await PostCategory.findOne({where: {id}});
+        const category = await EbookCategory.findOne({where: {id}});
 
         return res.status(200).json({category});
     } catch (err) {
@@ -64,7 +64,7 @@ const deleteCategory = async (req, res) => {
     const id = req.params.id;
 
     try {
-        await PostCategory.destroy({
+        await EbookCategory.destroy({
             where: {
                 id,
             },
