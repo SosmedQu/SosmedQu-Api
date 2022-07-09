@@ -282,7 +282,6 @@ router.post(
     ],
     subjectController.createSubject
 );
-router.get("/subjects/edit/:id", verifyToken, subjectController.editSubject);
 router.put(
     "/subjects",
     verifyToken,
@@ -313,7 +312,8 @@ router.put(
     ],
     subjectController.updateSubject
 );
-router.delete("/subjects", verifyToken, subjectController.deleteSubject);
+router.get("/subjects/:id", verifyToken, subjectController.editSubject);
+router.delete("/subjects/:id", verifyToken, subjectController.deleteSubject);
 //? END OF ENDPOINT OF API SUBJECTS
 
 //? ENDPOINT API POST CATEGORY

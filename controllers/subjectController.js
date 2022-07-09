@@ -56,7 +56,7 @@ const createSubject = async (req, res) => {
 };
 
 const editSubject = async (req, res) => {
-    const {id} = req.params.id;
+    const id = req.params.id;
 
     try {
         const subjects = await LessonTimetable.findOne({
@@ -106,7 +106,7 @@ const updateSubject = async (req, res) => {
 };
 
 const deleteSubject = async (req, res) => {
-    const {id} = req.body;
+    const id = req.params.id;
 
     try {
         const subject = await LessonTimetable.findOne({where: {id}, attributes: ["image"]});

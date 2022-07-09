@@ -15,6 +15,7 @@ const getAllEbooks = async (req, res) => {
                     attributes: ["username"],
                 },
             ],
+            order: [["id", "DESC"]],
         });
 
         return res.status(200).json({ebooks});
