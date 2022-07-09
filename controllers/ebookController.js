@@ -71,13 +71,7 @@ const createEbook = async (req, res) => {
     }
 
     try {
-        if (req.files.ebookImage) {
-            await Ebook.create({
-                image: req.files.ebookImage[0].filename,
-            });
-        }
-
-        await Ebook.create({
+        const ebook = await Ebook.create({
             userId: decoded.userId,
             categoryId,
             name,
@@ -88,6 +82,17 @@ const createEbook = async (req, res) => {
             publicationYear,
             isbn,
         });
+
+        if (req.files.ebookImage) {
+            await Ebook.update(
+                {image: req.files.ebookImage[0].filename},
+                {
+                    where: {
+                        id: ebook.id,
+                    },
+                }
+            );
+        }
 
         return res.status(200).json({msg: "Ebook berhasil diupload"});
     } catch (err) {
