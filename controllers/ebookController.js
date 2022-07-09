@@ -36,10 +36,12 @@ const ebookDetail = async (req, res) => {
                 },
                 {
                     model: User,
-                    attributes: ["username"],
+                    attributes: ["id", "username", "image"],
                 },
             ],
         });
+
+        if (!ebook) return res.status(404).json({msg: "Not Found"});
 
         return res.status(200).json({ebook});
     } catch (err) {
@@ -95,19 +97,6 @@ const createEbook = async (req, res) => {
         }
 
         return res.status(200).json({msg: "Ebook berhasil diupload"});
-    } catch (err) {
-        console.log(err);
-        return res.sendStatus(500);
-    }
-};
-
-const editEbook = async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        const ebook = await Ebook.findOne({where: {id}});
-
-        return res.status(200).json({ebook});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -201,4 +190,4 @@ const deleteEbook = async (req, res) => {
     }
 };
 
-module.exports = {getAllEbooks, ebookDetail, createEbook, editEbook, updateEbook, deleteEbook};
+module.exports = {getAllEbooks, ebookDetail, createEbook, updateEbook, deleteEbook};

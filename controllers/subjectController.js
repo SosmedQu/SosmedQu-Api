@@ -17,6 +17,8 @@ const getSubjects = async (req, res) => {
             ],
         });
 
+        if (subjects.length == 0) return res.status(404).json({msg: "Not Found"});
+
         return res.status(200).json({subjects});
     } catch (err) {
         console.log(err);

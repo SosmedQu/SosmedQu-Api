@@ -231,7 +231,6 @@ router.post(
     ],
     ebookController.createEbook
 );
-router.get("/ebooks/edit/:id", verifyToken, ebookController.editEbook);
 router.put(
     "/ebooks",
     verifyToken,
