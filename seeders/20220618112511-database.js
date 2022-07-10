@@ -69,6 +69,34 @@ module.exports = {
                 {
                     category: "Managemen",
                 },
+                {
+                    category: "Computer",
+                },
+                {
+                    category: "Bussiness",
+                },
+            ],
+            {}
+        );
+
+        await queryInterface.bulkInsert(
+            "ebook_categories",
+            [
+                {
+                    category: "Teknologi",
+                },
+                {
+                    category: "Ekonomi",
+                },
+                {
+                    category: "Managemen",
+                },
+                {
+                    category: "Computer",
+                },
+                {
+                    category: "Bussiness",
+                },
             ],
             {}
         );
@@ -87,9 +115,71 @@ module.exports = {
                     birthDay: new Date("2002-08-19"),
                     noHp: "087881955171",
                     studentCard: "default.jpg",
-                    nisn: "19200850",
+                    nisn: "3027006621",
                     studyAt: "UBSI",
                     province: "Jakarta Barat",
+                },
+            ],
+            {}
+        );
+
+        await queryInterface.bulkInsert(
+            "ebooks",
+            [
+                {
+                    userId: 1,
+                    categoryId: 4,
+                    name: "Hacker-Crackdown",
+                    fileName: "Hacker-Crackdown.pdf",
+                    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
+                    writer: "Masashi Kishimoto",
+                    publisher: "Shounen Jump",
+                    publicationYear: "2002",
+                    isbn: 9781072125757,
+                },
+                {
+                    userId: 1,
+                    categoryId: 5,
+                    name: "Emma",
+                    fileName: "Emma.pdf",
+                    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
+                    writer: "Masashi Kishimoto",
+                    publisher: "Shounen Jump",
+                    publicationYear: "2002",
+                    isbn: 9781072125757,
+                },
+                {
+                    userId: 1,
+                    categoryId: 4,
+                    name: "3D-Graphics-Modelling-and-Rendering-mini-HOWTO",
+                    fileName: "3D-Graphics-Modelling-and-Rendering-mini-HOWTO.pdf",
+                    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
+                    writer: "Masashi Kishimoto",
+                    publisher: "Shounen Jump",
+                    publicationYear: "2002",
+                    isbn: 9781072125757,
+                },
+                {
+                    userId: 1,
+                    categoryId: 4,
+                    name: "The-Hacker's-Dictionary",
+                    fileName: "The-Hacker's-Dictionary.pdf",
+                    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
+                    writer: "Masashi Kishimoto",
+                    publisher: "Shounen Jump",
+                    publicationYear: "2002",
+                    isbn: 9781072125757,
+                },
+                {
+                    userId: 1,
+                    categoryId: 4,
+                    name: "The-Size-of-Your-Dreams",
+                    fileName: "The-Size-of-Your-Dreams.pdf",
+                    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
+                    writer: "Masashi Kishimoto",
+                    publisher: "Shounen Jump",
+                    publicationYear: "2002",
+                    isbn: 9781072125757,
                 },
             ],
             {}

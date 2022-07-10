@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-    const Follower = sequelize.define(
-        "Follower",
+    const Follow = sequelize.define(
+        "Follow",
         {
             id: {
                 allowNull: false,
@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            follower: {
+            following: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
@@ -29,9 +29,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         {
             freezeTableName: true,
-            tableName: "followers",
+            tableName: "follows",
         }
     );
 
-    return Follower;
+    return Follow;
 };

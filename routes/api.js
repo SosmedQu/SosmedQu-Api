@@ -122,7 +122,30 @@ router.get("/profile/ebooks/:id", profileController.getAllEbook);
 router.post(
     "/profile/validateStudent",
     verifyToken,
+    studentCardUpload.single("studentCard"),
     [
+        check("studentCard").custom((value, {req}) => {
+            if (!req.file) {
+                throw new Error("Kartu pelajar wajib diupload");
+            }
+            return true;
+        }),
+        check("studentCard").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.mimetype != "image/png" && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg") {
+                    throw new Error("Hanya format .png, .jpg, dan .jpeg yang bisa diupload");
+                }
+            }
+            return true;
+        }),
+        check("studentCard").custom((value, {req}) => {
+            if (req.file) {
+                if (req.file.size > 10000000) {
+                    throw new Error("Maksimal ukuran file yang diupload tidak lebih dari 10 Mb");
+                }
+            }
+            return true;
+        }),
         check("username", "Username harus diisi").exists().trim().isLength({min: 1}),
         check("gender", "Jenis kelamin harus diisi").exists().trim().isLength({min: 1}),
         check("placeOfBirth", "Tempat lahir harus diisi").exists().trim().isLength({min: 1}),
@@ -130,7 +153,6 @@ router.post(
         check("birthDay", "Tanggal lahir harus diisi").exists().trim().isLength({min: 1}),
         check("noHp", "No Handphone harus diisi").exists().trim().isLength({min: 1}),
         check("noHp", "No Handphone tidak valid").isMobilePhone("id-ID"),
-        check("studentCard", "Kartu Pelajar wajib diupload").exists().trim().isLength({min: 1}),
         check("nisn", "NISN harus diisi").exists().trim().isLength({min: 1}),
         check("studyAt", "Asal Sekolah / Perguruan tinggi harus diisi").exists().trim().isLength({min: 1}),
         check("province", "Provinsi harus diisi").exists().trim().isLength({min: 1}),

@@ -42,13 +42,13 @@ module.exports = {
                 type: Sequelize.DATE,
             },
             noHp: {
-                type: Sequelize.BIGINT,
+                type: Sequelize.STRING,
             },
             studentCard: {
                 type: Sequelize.TEXT,
             },
             nisn: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
             },
             studyAt: {
                 type: Sequelize.STRING,

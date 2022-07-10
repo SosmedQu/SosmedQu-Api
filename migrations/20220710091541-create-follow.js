@@ -1,7 +1,7 @@
-module.exports = (sequelize, Sequelize) => {
-    const Following = sequelize.define(
-        "Following",
-        {
+"use strict";
+module.exports = {
+    async up(queryInterface, Sequelize) {
+        await queryInterface.createTable("follows", {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -26,12 +26,9 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.DATE,
                 defaultValue: new Date(),
             },
-        },
-        {
-            freezeTableName: true,
-            tableName: "followings",
-        }
-    );
-
-    return Following;
+        });
+    },
+    async down(queryInterface, Sequelize) {
+        await queryInterface.dropTable("follows");
+    },
 };

@@ -81,21 +81,24 @@ const getAllEbook = async (req, res) => {
 };
 
 const validateStudent = async (req, res) => {
-    const {username, gender, placeOfBirth, birthDay, noHp, studentCard, email, nisn, studyAt, province} = req.body;
+    const {username, gender, placeOfBirth, birthDay, noHp, email, nisn, studyAt, province} = req.body;
     const convertBirthDay = new Date(birthDay);
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         return res.status(400).json({errors: errors.array()});
     }
 
-    const regex = /^data:.+\/(.+);base64,(.*)$/;
-    const matches = studentCard.match(regex);
-    const ext = matches[1];
-    const data = matches[2];
-    const buffer = Buffer.from(data, "base64");
-    const fileName = `${Date.now()}.${ext}`;
-    fs.writeFileSync(`./public/images/studentCard/${fileName}`, buffer);
+    // const regex = /^data:.+\/(.+);base64,(.*)$/;
+    // const matches = studentCard.match(regex);
+    // const ext = matches[1];
+    // const data = matches[2];
+    // const buffer = Buffer.from(data, "base64");
+    // const fileName = `${Date.now()}.${ext}`;
+    // fs.writeFileSync(`./public/images/studentCard/${fileName}`, buffer);
 
     try {
         await User.update(
@@ -106,7 +109,7 @@ const validateStudent = async (req, res) => {
                 placeOfBirth,
                 birthDay: convertBirthDay,
                 noHp,
-                studentCard: fileName,
+                studentCard: req.file.filename,
                 nisn,
                 studyAt,
                 province,
@@ -126,6 +129,7 @@ const validateStudent = async (req, res) => {
                 },
             ],
         });
+
         const accessToken = jwt.sign(
             {userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, studyAt: user.studyAt, createdAt: user.createdAt},
             process.env.ACCESS_TOKEN_SECRET

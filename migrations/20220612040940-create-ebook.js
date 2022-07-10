@@ -39,7 +39,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             isbn: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
             },
             createdAt: {
                 allowNull: false,

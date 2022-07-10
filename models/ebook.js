@@ -21,6 +21,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             image: {
                 type: Sequelize.STRING,
+                defaultValue: "default.jpg",
             },
             fileName: {
                 type: Sequelize.STRING,
@@ -38,7 +39,7 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.STRING,
             },
             isbn: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
             },
             createdAt: {
                 allowNull: false,
@@ -117,13 +118,13 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.DATE,
             },
             noHp: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
             },
             studentCard: {
                 type: Sequelize.TEXT,
             },
             nisn: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
             },
             studyAt: {
                 type: Sequelize.STRING,
