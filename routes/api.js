@@ -118,6 +118,7 @@ router.post("/auth/logout", verifyToken, authController.logout);
 //? ENDPOINT API PROFILE
 router.get("/profile", profileController.getMyProfile);
 router.get("/profile/posts/:id", profileController.getAllPost);
+router.get("/profile/ebooks/:id", profileController.getAllEbook);
 router.post(
     "/profile/validateStudent",
     verifyToken,
