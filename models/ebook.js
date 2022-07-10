@@ -148,10 +148,10 @@ module.exports = (sequelize, Sequelize) => {
         }
     );
 
-    User.hasMany(Ebook, {foreignKey: "userId"});
-    Ebook.belongsTo(User, {foreignKey: "userId"});
-    EbookCategory.hasMany(Ebook, {foreignKey: "categoryId"});
-    Ebook.belongsTo(EbookCategory, {foreignKey: "categoryId"});
+    User.hasMany(Ebook, { foreignKey: "userId" });
+    Ebook.belongsTo(User, { foreignKey: "userId" });
+    EbookCategory.hasMany(Ebook, { foreignKey: "categoryId" });
+    Ebook.belongsTo(EbookCategory, { foreignKey: "categoryId" });
 
     return Ebook;
 };
