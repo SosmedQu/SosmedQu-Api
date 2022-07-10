@@ -17,6 +17,8 @@ const getSubjects = async (req, res) => {
             ],
         });
 
+        if (subjects.length == 0) return res.status(404).json({msg: "Not Found"});
+
         return res.status(200).json({subjects});
     } catch (err) {
         console.log(err);
@@ -56,7 +58,7 @@ const createSubject = async (req, res) => {
 };
 
 const editSubject = async (req, res) => {
-    const {id} = req.params.id;
+    const id = req.params.id;
 
     try {
         const subjects = await LessonTimetable.findOne({
@@ -106,7 +108,7 @@ const updateSubject = async (req, res) => {
 };
 
 const deleteSubject = async (req, res) => {
-    const {id} = req.body;
+    const id = req.params.id;
 
     try {
         const subject = await LessonTimetable.findOne({where: {id}, attributes: ["image"]});

@@ -1,13 +1,13 @@
 require("dotenv").config();
-const {validationResult} = require("express-validator");
-const {User, Role, Post, PostCategory, PostFile} = require("../models");
+const { validationResult } = require("express-validator");
+const { User, Role, Post, PostCategory, PostFile, Ebook, EbookCategory } = require("../models");
 const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 const jwt = require("jsonwebtoken");
 
 const getMyProfile = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
-    const user = await User.findOne({where: {id: decoded.userId}});
+    const user = await User.findOne({ where: { id: decoded.userId } });
 
     if (!user) return res.sendStatus(404);
 
@@ -16,11 +16,11 @@ const getMyProfile = async (req, res) => {
 
 const getProfile = async (req, res) => {
     const id = req.params.id;
-    const user = await User.findOne({where: {id}});
+    const user = await User.findOne({ where: { id } });
 
     if (!user) return res.sendStatus(404);
 
-    return res.status(200).json({user});
+    return res.status(200).json({ user });
 };
 
 const getAllPost = async (req, res) => {
@@ -45,10 +45,35 @@ const getAllPost = async (req, res) => {
         });
 
         if (posts.length == 0) {
-            return res.status(404).json({ msg: "Tidak ada postingan" });
+            return res.status(404).json({ msg: "Not Found" });
         }
 
         return res.status(200).json({ posts });
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+};
+
+const getAllEbook = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const ebooks = await Ebook.findAll({
+            where: { userId: id },
+            include: [
+                {
+                    model: EbookCategory,
+                },
+            ],
+            order: [["id", "DESC"]],
+        });
+
+        if (ebooks.length == 0) {
+            return res.status(404).json({ msg: "Not Found" });
+        }
+
+        return res.status(200).json({ ebooks });
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
@@ -102,12 +127,12 @@ const validateStudent = async (req, res) => {
             ],
         });
         const accessToken = jwt.sign(
-            {userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, studyAt: user.studyAt, createdAt: user.createdAt},
+            { userId: user.id, statusId: user.statusId, username: user.username, role: user.Role.roleName, province: user.province, gender: user.gender, studyAt: user.studyAt, createdAt: user.createdAt },
             process.env.ACCESS_TOKEN_SECRET
         );
 
         await User.update(
-            {accessToken},
+            { accessToken },
             {
                 where: {
                     email,
@@ -227,4 +252,4 @@ const updateStudent = async (req, res) => {
 //     console.log(decoded);
 // };
 
-module.exports = {validateStudent, getProfile, getAllPost, updateGeneral, updateStudent, getMyProfile};
+module.exports = { validateStudent, getProfile, getAllPost, updateGeneral, updateStudent, getMyProfile, getAllEbook };

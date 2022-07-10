@@ -118,6 +118,7 @@ router.post("/auth/logout", verifyToken, authController.logout);
 //? ENDPOINT API PROFILE
 router.get("/profile", profileController.getMyProfile);
 router.get("/profile/posts/:id", profileController.getAllPost);
+router.get("/profile/ebooks/:id", profileController.getAllEbook);
 router.post(
     "/profile/validateStudent",
     verifyToken,
@@ -231,7 +232,6 @@ router.post(
     ],
     ebookController.createEbook
 );
-router.get("/ebooks/edit/:id", verifyToken, ebookController.editEbook);
 router.put(
     "/ebooks",
     verifyToken,
@@ -282,7 +282,6 @@ router.post(
     ],
     subjectController.createSubject
 );
-router.get("/subjects/edit/:id", verifyToken, subjectController.editSubject);
 router.put(
     "/subjects",
     verifyToken,
@@ -313,7 +312,8 @@ router.put(
     ],
     subjectController.updateSubject
 );
-router.delete("/subjects", verifyToken, subjectController.deleteSubject);
+router.get("/subjects/:id", verifyToken, subjectController.editSubject);
+router.delete("/subjects/:id", verifyToken, subjectController.deleteSubject);
 //? END OF ENDPOINT OF API SUBJECTS
 
 //? ENDPOINT API POST CATEGORY

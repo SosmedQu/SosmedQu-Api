@@ -15,6 +15,7 @@ const getAllEbooks = async (req, res) => {
                     attributes: ["username"],
                 },
             ],
+            order: [["id", "DESC"]],
         });
 
         return res.status(200).json({ ebooks });
@@ -35,12 +36,14 @@ const ebookDetail = async (req, res) => {
                 },
                 {
                     model: User,
-                    attributes: ["username"],
+                    attributes: ["id", "username", "image"],
                 },
             ],
         });
 
-        return res.status(200).json({ ebook });
+        if (!ebook) return res.status(404).json({msg: "Not Found"});
+
+        return res.status(200).json({ebook});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -69,8 +72,6 @@ const createEbook = async (req, res) => {
         return res.status(401).json({ msg: "Unauthorized" });
     }
 
-
-    console.log(req);
     try {
         const ebook = await Ebook.create({
             userId: decoded.userId,
@@ -86,7 +87,7 @@ const createEbook = async (req, res) => {
 
         if (req.files.ebookImage) {
             await Ebook.update(
-                { image: req.files.ebookImage[0].filename },
+                {image: req.files.ebookImage[0].filename},
                 {
                     where: {
                         id: ebook.id,
@@ -95,21 +96,7 @@ const createEbook = async (req, res) => {
             );
         }
 
-
-        return res.status(200).json({ msg: "Ebook berhasil diupload" });
-    } catch (err) {
-        console.log(err);
-        return res.sendStatus(500);
-    }
-};
-
-const editEbook = async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        const ebook = await Ebook.findOne({ where: { id } });
-
-        return res.status(200).json({ ebook });
+        return res.status(200).json({msg: "Ebook berhasil diupload"});
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -203,4 +190,4 @@ const deleteEbook = async (req, res) => {
     }
 };
 
-module.exports = { getAllEbooks, ebookDetail, createEbook, editEbook, updateEbook, deleteEbook };
+module.exports = {getAllEbooks, ebookDetail, createEbook, updateEbook, deleteEbook};
