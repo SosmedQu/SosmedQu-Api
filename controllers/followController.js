@@ -11,12 +11,21 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
 });
 
 const getFollowing = async (req, res) => {
-    const decoded = jwt_decode(req.cookies.accessToken);
+    const id = req.params.id;
     try {
         const following = await Follow.findAll({
-            where: {userId: decoded.userId},
-            attributes: [[sequelize.fn("COUNT", sequelize.col("following")), "following"]],
+            where: {userId: id},
+            attributes: [],
+            include: [
+                {
+                    model: User,
+                    as: "followingId",
+                    attributes: ["id", "username", "image"],
+                },
+            ],
         });
+
+        if (following.length == 0) return res.status(404).json({msg: "Not Found"});
 
         return res.status(200).json({following});
     } catch (err) {
@@ -25,10 +34,66 @@ const getFollowing = async (req, res) => {
     }
 };
 
-const getFollower = async (req, res) => {};
+const getFollower = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const following = await Follow.findAll({
+            where: {following: id},
+            attributes: [],
+            include: [
+                {
+                    model: User,
+                    as: "followerId",
+                    attributes: ["id", "username", "image"],
+                },
+            ],
+        });
 
-const unfollow = async (req, res) => {};
+        if (following.length == 0) return res.status(404).json({msg: "Not Found"});
 
-const following = async (req, res) => {};
+        return res.status(200).json({following});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+
+const unfollow = async (req, res) => {
+    const id = req.params.id;
+    const decoded = jwt_decode(req.cookies.accessToken);
+
+    try {
+        await Follow.destroy({
+            where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
+        });
+
+        return res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+
+const following = async (req, res) => {
+    const id = req.params.id;
+    const decoded = jwt_decode(req.cookies.accessToken);
+
+    try {
+        if (id == decoded.userId) return res.status(403).json({msg: "Forbidden"});
+
+        const checkFollow = await Follow.findOne({
+            where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
+        });
+
+        if (checkFollow) return res.status(403).json({msg: "Forbidden"});
+
+        await Follow.create({userId: decoded.userId, following: id});
+
+        return res.sendStatus(201);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
 
 module.exports = {getFollowing, getFollower, unfollow, following};

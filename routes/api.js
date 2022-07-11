@@ -9,6 +9,7 @@ const schoolController = require("../controllers/schoolController");
 const postCategoryController = require("../controllers/postCategoryController");
 const ebookCategoryController = require("../controllers/ebookCategoryController");
 const followController = require("../controllers/followController");
+const dayController = require("../controllers/dayController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
 const router = express.Router();
@@ -356,6 +357,10 @@ router.get("/ebookCategory/:id", ebookCategoryController.getCategory);
 router.delete("/ebookCategory/:id", ebookCategoryController.deleteCategory);
 //? END OF ENDPOINT OF API EBOOK CATEGORY
 
+//? ENDPOINT DAY
+router.get("/days", dayController.getAllDay);
+//? END OF ENDPOINT OF DAY
+
 //? ENDPOINT API SCHOOL
 router.get("/schools", schoolController.getSchool);
 router.post("/schools", schoolController.createSchool);
@@ -370,11 +375,10 @@ router.delete("/notes/:id", verifyToken, personalNoteController.deleteNote);
 //? END OF ENDPOINT OF API PERSONAL NOTE
 
 //? ENDPOINT API FOLLOW
-router.get("/following", followController.getFollowing);
-router.get("/followers", followController.getFollower);
-router.post("unfollow/:id", followController.unfollow);
+router.get("/following/:id", followController.getFollowing);
+router.get("/followers/:id", followController.getFollower);
+router.post("/unfollow/:id", followController.unfollow);
 router.post("/following/:id", followController.following);
-
 //? END OF ENDPOINT OF API FOLLOW
 
 module.exports = router;

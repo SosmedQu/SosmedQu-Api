@@ -1,26 +1,52 @@
 require("dotenv").config();
 const {validationResult} = require("express-validator");
-const {User, Role, Post, PostCategory, PostFile, Ebook, EbookCategory} = require("../models");
+const {User, Role, Post, PostCategory, PostFile, Ebook, EbookCategory, Follow} = require("../models");
 const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 const jwt = require("jsonwebtoken");
+const {Sequelize, Op} = require("sequelize");
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: 5432,
+    dialect: process.env.DB_DIALECT,
+    logging: false,
+});
 
 const getMyProfile = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
     const user = await User.findOne({where: {id: decoded.userId}});
 
-    if (!user) return res.sendStatus(404);
+    if (!user) return res.status(404).json({msg: "Not Found"});
 
     return res.status(200).json({user});
 };
 
 const getProfile = async (req, res) => {
     const id = req.params.id;
-    const user = await User.findOne({where: {id}});
+    const decoded = jwt_decode(req.cookies.accessToken);
+    const user = await User.findOne({
+        where: {id},
+    });
 
-    if (!user) return res.sendStatus(404);
+    if (!user) return res.status(404).json({msg: "Not Found"});
 
-    return res.status(200).json({user});
+    const following = await Follow.findAll({
+        where: {userId: id},
+        attributes: [[sequelize.fn("COUNT", sequelize.col("userId")), "following"]],
+    });
+
+    const follower = await Follow.findAll({
+        where: {following: id},
+        attributes: [[sequelize.fn("COUNT", sequelize.col("following")), "follower"]],
+    });
+
+    // const checkFollow = (await Follow.findOne({
+    //     where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
+    // }))
+    //     ? true
+    //     : false;
+
+    return res.status(200).json({user, following, follower});
 };
 
 const getAllPost = async (req, res) => {
