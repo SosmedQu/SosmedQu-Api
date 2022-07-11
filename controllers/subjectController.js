@@ -1,8 +1,16 @@
+require("dotenv").config();
 const {validationResult} = require("express-validator");
 const {User, LessonTimetable, Day} = require("../models");
 const jwt_decode = require("jwt-decode");
 const fs = require("fs");
 const {Op} = require("sequelize");
+const {Sequelize} = require("sequelize");
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: 5432,
+    dialect: process.env.DB_DIALECT,
+    logging: false,
+});
 
 const getSubjects = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
@@ -10,11 +18,11 @@ const getSubjects = async (req, res) => {
     try {
         const subjects = await LessonTimetable.findAll({
             where: {userId: decoded.userId},
-            attributes: ["dayId"],
+            attributes: ["dayId", [sequelize.col("Day.day"), "day"]],
             include: [
                 {
                     model: Day,
-                    attributes: ["id", "day", "createdAt", "updatedAt"],
+                    attributes: [],
                 },
             ],
             group: ["Day.id", "dayId"],

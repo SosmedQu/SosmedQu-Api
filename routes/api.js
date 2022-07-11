@@ -8,6 +8,7 @@ const personalNoteController = require("../controllers/personalNoteController");
 const schoolController = require("../controllers/schoolController");
 const postCategoryController = require("../controllers/postCategoryController");
 const ebookCategoryController = require("../controllers/ebookCategoryController");
+const followController = require("../controllers/followController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {check} = require("express-validator");
 const router = express.Router();
@@ -367,5 +368,13 @@ router.put("/notes", verifyToken, personalNoteController.updateNote);
 router.get("/notes/:id", verifyToken, personalNoteController.getNote);
 router.delete("/notes/:id", verifyToken, personalNoteController.deleteNote);
 //? END OF ENDPOINT OF API PERSONAL NOTE
+
+//? ENDPOINT API FOLLOW
+router.get("/following", followController.getFollowing);
+router.get("/followers", followController.getFollower);
+router.post("unfollow/:id", followController.unfollow);
+router.post("/following/:id", followController.following);
+
+//? END OF ENDPOINT OF API FOLLOW
 
 module.exports = router;
