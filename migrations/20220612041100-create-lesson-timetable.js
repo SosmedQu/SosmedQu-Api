@@ -14,12 +14,13 @@ module.exports = {
             },
             image: {
                 type: Sequelize.STRING,
+                defaultValue: "default.jpg",
             },
             subject: {
                 type: Sequelize.STRING,
             },
-            day: {
-                type: Sequelize.STRING,
+            dayId: {
+                type: Sequelize.INTEGER,
             },
             hour: {
                 type: Sequelize.TIME,

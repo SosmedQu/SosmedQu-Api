@@ -14,12 +14,13 @@ module.exports = (sequelize, Sequelize) => {
             },
             image: {
                 type: Sequelize.STRING,
+                defaultValue: "default.jpg",
             },
             subject: {
                 type: Sequelize.STRING,
             },
-            day: {
-                type: Sequelize.STRING,
+            dayId: {
+                type: Sequelize.INTEGER,
             },
             hour: {
                 type: Sequelize.TIME,
@@ -122,8 +123,39 @@ module.exports = (sequelize, Sequelize) => {
         }
     );
 
+    const Day = sequelize.define(
+        "Day",
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: Sequelize.INTEGER,
+            },
+            day: {
+                type: Sequelize.STRING,
+            },
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+            updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+        },
+        {
+            freezeTableName: true,
+            tableName: "days",
+        }
+    );
+
     User.hasMany(LessonTimetable, {foreignKey: "userId"});
     LessonTimetable.belongsTo(User, {foreignKey: "userId"});
+    Day.hasMany(LessonTimetable, {foreignKey: "dayId"});
+    LessonTimetable.belongsTo(Day, {foreignKey: "dayId"});
 
     return LessonTimetable;
 };

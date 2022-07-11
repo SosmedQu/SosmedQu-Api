@@ -26,6 +26,18 @@
         {
             "name": "Posts",
             "description": "Posts Endpoint"
+        },
+        {
+            "name": "Ebooks",
+            "description": "Ebooks Endpoint"
+        },
+        {
+            "name": "Notes",
+            "description": "Personal Note Endpoint"
+        },
+        {
+            "name": "Subjects",
+            "description": "Subjects Endpoint"
         }
     ],
     "paths": {

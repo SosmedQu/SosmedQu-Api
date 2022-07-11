@@ -296,7 +296,7 @@ router.post(
             return true;
         }),
         check("subject", "Mata pelajaran atau matkul harus diisi").exists().trim().isLength({min: 1}),
-        check("day", "Hari harus diisi").exists().trim().isLength({min: 1}),
+        check("dayId", "Hari harus diisi").exists().trim().isLength({min: 1}),
         check("hour", "Jam harus diisi").exists().trim().isLength({min: 1}),
         check("teacher", "Nama guru atau dosen harus diisi").exists().trim().isLength({min: 1}),
         check("class", "Kelas harus diisi").exists().trim().isLength({min: 1}),
@@ -326,7 +326,7 @@ router.put(
             return true;
         }),
         check("subject", "Mata pelajaran atau matkul harus diisi").exists().trim().isLength({min: 1}),
-        check("day", "Hari harus diisi").exists().trim().isLength({min: 1}),
+        check("dayId", "Hari harus diisi").exists().trim().isLength({min: 1}),
         check("hour", "Jam harus diisi").exists().trim().isLength({min: 1}),
         check("teacher", "Nama guru atau dosen harus diisi").exists().trim().isLength({min: 1}),
         check("class", "Kelas harus diisi").exists().trim().isLength({min: 1}),
@@ -334,7 +334,8 @@ router.put(
     ],
     subjectController.updateSubject
 );
-router.get("/subjects/:id", verifyToken, subjectController.editSubject);
+router.get("/subjects/day/:id", verifyToken, subjectController.getSubjectByDayId);
+router.get("/subjects/:id", verifyToken, subjectController.getSubject);
 router.delete("/subjects/:id", verifyToken, subjectController.deleteSubject);
 //? END OF ENDPOINT OF API SUBJECTS
 

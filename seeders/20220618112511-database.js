@@ -80,6 +80,34 @@ module.exports = {
         );
 
         await queryInterface.bulkInsert(
+            "days",
+            [
+                {
+                    day: "Senin",
+                },
+                {
+                    day: "Selasa",
+                },
+                {
+                    day: "Rabu",
+                },
+                {
+                    day: "Kamis",
+                },
+                {
+                    day: "Jumat",
+                },
+                {
+                    day: "Sabtu",
+                },
+                {
+                    day: "Minggu",
+                },
+            ],
+            {}
+        );
+
+        await queryInterface.bulkInsert(
             "ebook_categories",
             [
                 {
@@ -96,6 +124,58 @@ module.exports = {
                 },
                 {
                     category: "Bussiness",
+                },
+            ],
+            {}
+        );
+
+        await queryInterface.bulkInsert(
+            "lesson_timetables",
+            [
+                {
+                    userId: 1,
+                    subject: "MP",
+                    dayId: 2,
+                    hour: "14:30",
+                    teacher: "Andri",
+                    class: "194a25",
+                    semester: 4,
+                },
+                {
+                    userId: 1,
+                    subject: "IMK",
+                    dayId: 4,
+                    hour: "14:30",
+                    teacher: "Anggraini",
+                    class: "194a25",
+                    semester: 4,
+                },
+                {
+                    userId: 1,
+                    subject: "MPSI",
+                    dayId: 1,
+                    hour: "14:30",
+                    teacher: "Yeni",
+                    class: "194a25",
+                    semester: 4,
+                },
+                {
+                    userId: 1,
+                    subject: "WP",
+                    dayId: 3,
+                    hour: "14:30",
+                    teacher: "Anggie",
+                    class: "194a25",
+                    semester: 4,
+                },
+                {
+                    userId: 1,
+                    subject: "STATISTIK",
+                    dayId: 3,
+                    hour: "14:30",
+                    teacher: "Dirga",
+                    class: "194a25",
+                    semester: 5,
                 },
             ],
             {}
