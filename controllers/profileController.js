@@ -14,39 +14,64 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
 
 const getMyProfile = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
-    const user = await User.findOne({where: {id: decoded.userId}});
 
-    if (!user) return res.status(404).json({msg: "Not Found"});
+    try {
+        const user = await User.findOne({where: {id: decoded.userId}});
 
-    return res.status(200).json({user});
+        if (!user) return res.status(404).json({msg: "Not Found"});
+
+        const following = await Follow.findAll({
+            where: {userId: decoded.userId},
+            attributes: [[sequelize.fn("COUNT", sequelize.col("userId")), "following"]],
+        });
+
+        const follower = await Follow.findAll({
+            where: {following: decoded.userId},
+            attributes: [[sequelize.fn("COUNT", sequelize.col("following")), "follower"]],
+        });
+
+        return res.status(200).json({user, following, follower});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
 };
 
 const getProfile = async (req, res) => {
     const id = req.params.id;
-    const decoded = jwt_decode(req.cookies.accessToken);
-    const user = await User.findOne({
-        where: {id},
-    });
 
-    if (!user) return res.status(404).json({msg: "Not Found"});
+    try {
+        const user = await User.findOne({
+            where: {id},
+        });
 
-    const following = await Follow.findAll({
-        where: {userId: id},
-        attributes: [[sequelize.fn("COUNT", sequelize.col("userId")), "following"]],
-    });
+        if (!user) return res.status(404).json({msg: "Not Found"});
 
-    const follower = await Follow.findAll({
-        where: {following: id},
-        attributes: [[sequelize.fn("COUNT", sequelize.col("following")), "follower"]],
-    });
+        const following = await Follow.findAll({
+            where: {userId: id},
+            attributes: [[sequelize.fn("COUNT", sequelize.col("userId")), "following"]],
+        });
 
-    // const checkFollow = (await Follow.findOne({
-    //     where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
-    // }))
-    //     ? true
-    //     : false;
+        const follower = await Follow.findAll({
+            where: {following: id},
+            attributes: [[sequelize.fn("COUNT", sequelize.col("following")), "follower"]],
+        });
 
-    return res.status(200).json({user, following, follower});
+        if (req.cookies.accessToken) {
+            const decoded = jwt_decode(req.cookies.accessToken);
+            const checkFollow = (await Follow.findOne({
+                where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
+            }))
+                ? true
+                : false;
+            return res.status(200).json({user, following, follower, checkFollow});
+        }
+
+        return res.status(200).json({user, following, follower});
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
 };
 
 const getAllPost = async (req, res) => {

@@ -63,9 +63,11 @@ const unfollow = async (req, res) => {
     const decoded = jwt_decode(req.cookies.accessToken);
 
     try {
-        await Follow.destroy({
+        const deleted = await Follow.destroy({
             where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
         });
+
+        if (deleted == 0) return res.status(404).json({msg: "Not Found"});
 
         return res.sendStatus(200);
     } catch (err) {
