@@ -19,6 +19,10 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            statusId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
             caption: {
                 type: Sequelize.TEXT,
             },

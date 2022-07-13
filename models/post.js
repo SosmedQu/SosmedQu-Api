@@ -16,6 +16,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            statusId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
             caption: {
                 type: Sequelize.TEXT,
             },
@@ -166,12 +170,46 @@ module.exports = (sequelize, Sequelize) => {
         }
     );
 
+    const Status = sequelize.define(
+        "Status",
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: Sequelize.INTEGER,
+            },
+            code: {
+                type: Sequelize.INTEGER,
+            },
+            statusName: {
+                type: Sequelize.STRING,
+            },
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+            updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+        },
+        {
+            freezeTableName: true,
+            tableName: "status",
+        }
+    );
+
     User.hasMany(Post, {foreignKey: "userId"});
     Post.belongsTo(User, {foreignKey: "userId"});
     PostCategory.hasMany(Post, {foreignKey: "categoryId"});
     Post.belongsTo(PostCategory, {foreignKey: "categoryId"});
     Post.hasMany(PostFile, {foreignKey: "postId"});
     PostFile.belongsTo(Post, {foreignKey: "postId"});
+    Status.hasMany(Post, {foreignKey: "statusId"});
+    Post.belongsTo(Status, {foreignKey: "statusId"});
 
     return Post;
 };

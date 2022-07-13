@@ -10,7 +10,9 @@ const postCategoryController = require("../controllers/postCategoryController");
 const ebookCategoryController = require("../controllers/ebookCategoryController");
 const followController = require("../controllers/followController");
 const dayController = require("../controllers/dayController");
+const violationController = require("../controllers/violationController");
 const {verifyToken} = require("../middleware/verifyToken");
+const {isAdmin} = require("../middleware/isAdmin");
 const {check} = require("express-validator");
 const router = express.Router();
 const multer = require("multer");
@@ -380,5 +382,14 @@ router.get("/followers/:id", followController.getFollower);
 router.post("/unfollow/:id", followController.unfollow);
 router.post("/following/:id", followController.following);
 //? END OF ENDPOINT OF API FOLLOW
+
+//? ENDPOINT API VIOLATION
+router.get("/violations/posts", violationController.getAllPostViolation);
+router.get("/violations/users", violationController.getAllUserViolation);
+router.post("/violations", violationController.createViolation);
+router.post("/violations/block", violationController.block);
+router.post("/violations/activate", violationController.activate);
+// router.delete("/violations/:id", violationController.deleteViolation);
+//? END OF ENDPOINT OF API VIOLATION
 
 module.exports = router;

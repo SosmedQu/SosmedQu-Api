@@ -2,10 +2,12 @@ const {validationResult} = require("express-validator");
 const {User, Post, PostCategory, PostFile} = require("../models");
 const jwt_decode = require("jwt-decode");
 const fs = require("fs");
+const {Op} = require("sequelize");
 
 const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({
+            where: {statusId: {[Op.ne]: 0}},
             include: [
                 {
                     model: PostCategory,

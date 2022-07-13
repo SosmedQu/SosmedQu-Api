@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-    const StatusAccount = sequelize.define(
-        "StatusAccount",
+    const Status = sequelize.define(
+        "Status",
         {
             id: {
                 allowNull: false,
@@ -14,12 +14,22 @@ module.exports = (sequelize, Sequelize) => {
             statusName: {
                 type: Sequelize.STRING,
             },
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+            updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
         },
         {
             freezeTableName: true,
-            tableName: "status_accounts",
+            tableName: "status",
         }
     );
 
-    return StatusAccount;
+    return Status;
 };

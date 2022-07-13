@@ -79,7 +79,7 @@ const getAllPost = async (req, res) => {
 
     try {
         const posts = await Post.findAll({
-            where: {userId: id},
+            where: {[Op.and]: [{userId: id}, {statusId: {[Op.ne]: 0}}]},
             include: [
                 {
                     model: PostCategory,

@@ -1,5 +1,18 @@
 "use strict";
 
+// const days = [];
+
+const {faker} = require("@faker-js/faker");
+// function createRandomUser() {
+//     return {
+//         day: faker.internet.userName(),
+//     };
+// }
+
+// Array.from({length: 10}).forEach(() => {
+//     days.push(createRandomUser());
+// });
+
 const bcrypt = require("bcrypt");
 const posts = [];
 const postFiles = [];
@@ -8,6 +21,7 @@ for (let i = 0; i < 10; i++) {
     posts.push({
         userId: 1,
         categoryId: Math.ceil(Math.random() * 3),
+        statusId: 1,
         caption:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos. Qui odit asperiores quaerat exercitationem quam tempore ipsam ullam temporibus id, labore totam repudiandae vero, reiciendis sed atque neque, autem ipsum sapiente nulla! Cupiditate atque laudantium voluptas iusto impedit quisquam quos vel aperiam.",
     });
@@ -41,7 +55,7 @@ module.exports = {
         );
 
         await queryInterface.bulkInsert(
-            "status_accounts",
+            "status",
             [
                 {
                     code: 0,
@@ -49,7 +63,11 @@ module.exports = {
                 },
                 {
                     code: 1,
-                    statusName: "terverivikasi",
+                    statusName: "active",
+                },
+                {
+                    code: 2,
+                    statusName: "monitoring",
                 },
             ],
             {}
@@ -137,7 +155,7 @@ module.exports = {
                     subject: "MP",
                     dayId: 2,
                     hour: "14:30",
-                    teacher: "Andri",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 4,
                 },
@@ -146,7 +164,7 @@ module.exports = {
                     subject: "IMK",
                     dayId: 4,
                     hour: "14:30",
-                    teacher: "Anggraini",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 4,
                 },
@@ -155,7 +173,7 @@ module.exports = {
                     subject: "MPSI",
                     dayId: 1,
                     hour: "14:30",
-                    teacher: "Yeni",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 4,
                 },
@@ -164,7 +182,7 @@ module.exports = {
                     subject: "WP",
                     dayId: 3,
                     hour: "14:00",
-                    teacher: "Anggie",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 4,
                 },
@@ -173,7 +191,7 @@ module.exports = {
                     subject: "STATISTIK",
                     dayId: 3,
                     hour: "10:30",
-                    teacher: "Dirga",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 5,
                 },
@@ -182,7 +200,7 @@ module.exports = {
                     subject: "STATISTIK",
                     dayId: 3,
                     hour: "14:30",
-                    teacher: "Dirga",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 5,
                 },
@@ -191,7 +209,7 @@ module.exports = {
                     subject: "Management",
                     dayId: 1,
                     hour: "08:30",
-                    teacher: "Dinda",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 5,
                 },
@@ -200,7 +218,7 @@ module.exports = {
                     subject: "Fisika",
                     dayId: 2,
                     hour: "12:30",
-                    teacher: "Chika",
+                    teacher: faker.name.firstName(),
                     class: "194a25",
                     semester: 5,
                 },
@@ -231,6 +249,21 @@ module.exports = {
                     statusId: 1,
                     username: "Crownix",
                     email: "crownix@gmail.com",
+                    password: hashPassword,
+                    gender: "laki-laki",
+                    placeOfBirth: "Tegal",
+                    birthDay: new Date("2002-08-19"),
+                    noHp: "087881955171",
+                    studentCard: "default.jpg",
+                    nisn: "3027006621",
+                    studyAt: "UBSI",
+                    province: "Jakarta Barat",
+                },
+                {
+                    roleId: 1,
+                    statusId: 1,
+                    username: "admin",
+                    email: "admin@gmail.com",
                     password: hashPassword,
                     gender: "laki-laki",
                     placeOfBirth: "Tegal",

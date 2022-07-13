@@ -10,7 +10,6 @@ module.exports = {
             },
             reporter: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
             },
             feature: {
                 type: Sequelize.STRING,
