@@ -13,6 +13,7 @@ const getAllLike = async (req, res) => {
 
     try {
         const likes = await Like.findAll({
+            where: {postId: id},
             include: [
                 {
                     model: User,
@@ -20,6 +21,8 @@ const getAllLike = async (req, res) => {
                 },
             ],
         });
+
+        if (likes.length == 0) return res.status(404).json({msg: "Not Found"});
 
         return res.status(200).json({likes});
     } catch (err) {
@@ -48,4 +51,26 @@ const createLike = async (req, res) => {
     }
 };
 
-module.exports = {getAllLike, createLike};
+const unlike = async (req, res) => {
+    const {postId} = req.body;
+    const decoded = jwt_decode(req.cookies.accessToken);
+
+    try {
+        const checkLike = await Like.findOne({
+            where: {[Op.and]: [{postId}, {userId: decoded.userId}]},
+        });
+
+        if (!checkLike) return res.status(403).json({msg: "Forbidden"});
+
+        await Like.destroy({
+            where: {[Op.and]: [{postId}, {userId: decoded.userId}]},
+        });
+
+        return res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+};
+
+module.exports = {getAllLike, createLike, unlike};

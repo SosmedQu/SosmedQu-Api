@@ -401,6 +401,7 @@ router.get("/rankings", rankingController.getAllTopUser);
 
 //? ENDPOINT API LIKE
 router.post("/likes", likeController.createLike);
+router.post("/unlikes", likeController.unlike);
 router.get("/likes/:id", likeController.getAllLike); // id disini id postingan
 //? END OF ENDPOINT OF API LIKE
 

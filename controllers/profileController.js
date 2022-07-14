@@ -59,12 +59,23 @@ const getProfile = async (req, res) => {
 
         if (req.cookies.accessToken) {
             const decoded = jwt_decode(req.cookies.accessToken);
-            const checkFollow = (await Follow.findOne({
+            const status = (await Follow.findOne({
                 where: {[Op.and]: [{userId: decoded.userId}, {following: id}]},
             }))
-                ? true
-                : false;
-            return res.status(200).json({user, following, follower, checkFollow});
+                ? "follow"
+                : "not follow";
+
+            if (status == "follow") {
+                const status = (await Follow.findOne({
+                    where: {
+                        [Op.and]: [{userId: id, following: decoded.userId}],
+                    },
+                }))
+                    ? "friend"
+                    : "follow";
+                return res.status(200).json({user, following, follower, status});
+            }
+            return res.status(200).json({user, following, follower, status});
         }
 
         return res.status(200).json({user, following, follower});
