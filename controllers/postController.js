@@ -1,8 +1,14 @@
 const {validationResult} = require("express-validator");
-const {User, Post, PostCategory, PostFile} = require("../models");
+const {User, Post, PostCategory, PostFile, Like} = require("../models");
 const jwt_decode = require("jwt-decode");
 const fs = require("fs");
-const {Op} = require("sequelize");
+const {Sequelize, Op} = require("sequelize");
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: 5432,
+    dialect: process.env.DB_DIALECT,
+    logging: false,
+});
 
 const getAllPosts = async (req, res) => {
     try {
@@ -18,6 +24,9 @@ const getAllPosts = async (req, res) => {
                 },
                 {
                     model: PostFile,
+                },
+                {
+                    model: Like,
                 },
             ],
             order: [["id", "DESC"]],

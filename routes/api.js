@@ -10,7 +10,10 @@ const postCategoryController = require("../controllers/postCategoryController");
 const ebookCategoryController = require("../controllers/ebookCategoryController");
 const followController = require("../controllers/followController");
 const dayController = require("../controllers/dayController");
+const rankingController = require("../controllers/rankingController");
 const violationController = require("../controllers/violationController");
+const likeController = require("../controllers/likeController");
+const commentController = require("../controllers/commentController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {isAdmin} = require("../middleware/isAdmin");
 const {check} = require("express-validator");
@@ -391,5 +394,19 @@ router.post("/violations/block", violationController.block);
 router.post("/violations/activate", violationController.activate);
 // router.delete("/violations/:id", violationController.deleteViolation);
 //? END OF ENDPOINT OF API VIOLATION
+
+//? ENDPOINT API RANKINGS
+router.get("/rankings", rankingController.getAllTopUser);
+//? END OF ENDPOINT OF API RANKINGS
+
+//? ENDPOINT API LIKE
+router.post("/likes", likeController.createLike);
+router.get("/likes/:id", likeController.getAllLike); // id disini id postingan
+//? END OF ENDPOINT OF API LIKE
+
+//? ENDPOINT API COMMENT
+router.post("/comments", commentController.createComment);
+router.get("/comments/:id", commentController.getAllComment); // id disini id postingan
+//? END OF ENDPOINT OF API COMMENT
 
 module.exports = router;

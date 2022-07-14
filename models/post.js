@@ -202,12 +202,48 @@ module.exports = (sequelize, Sequelize) => {
         }
     );
 
+    const Like = sequelize.define(
+        "Like",
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: Sequelize.INTEGER,
+            },
+            postId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            userId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+            updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: new Date(),
+            },
+        },
+        {
+            freezeTableName: true,
+            tableName: "likes",
+        }
+    );
+
     User.hasMany(Post, {foreignKey: "userId"});
     Post.belongsTo(User, {foreignKey: "userId"});
     PostCategory.hasMany(Post, {foreignKey: "categoryId"});
     Post.belongsTo(PostCategory, {foreignKey: "categoryId"});
     Post.hasMany(PostFile, {foreignKey: "postId"});
     PostFile.belongsTo(Post, {foreignKey: "postId"});
+    Post.hasMany(Like, {foreignKey: "postId"});
+    Like.belongsTo(Post, {foreignKey: "postId"});
     Status.hasMany(Post, {foreignKey: "statusId"});
     Post.belongsTo(Status, {foreignKey: "statusId"});
 

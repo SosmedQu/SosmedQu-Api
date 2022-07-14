@@ -17,22 +17,13 @@ const bcrypt = require("bcrypt");
 const posts = [];
 const postFiles = [];
 const images = ["computer.jpg", "economy.jpg", "management.jpg", "matematic.jpg"];
-for (let i = 0; i < 10; i++) {
-    posts.push({
-        userId: 1,
-        categoryId: Math.ceil(Math.random() * 3),
-        statusId: 1,
-        caption:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos. Qui odit asperiores quaerat exercitationem quam tempore ipsam ullam temporibus id, labore totam repudiandae vero, reiciendis sed atque neque, autem ipsum sapiente nulla! Cupiditate atque laudantium voluptas iusto impedit quisquam quos vel aperiam.",
-    });
-}
 
-for (let i = 0; i < posts.length; i++) {
-    postFiles.push({
-        postId: Math.ceil(Math.random() * posts.length),
-        fileName: images[Math.floor(Math.random() * images.length)],
-    });
-}
+// for (let i = 0; i < posts.length; i++) {
+//     postFiles.push({
+//         postId: Math.ceil(Math.random() * posts.length),
+//         fileName: images[Math.floor(Math.random() * images.length)],
+//     });
+// }
 
 module.exports = {
     async up(queryInterface, Sequelize) {
@@ -73,7 +64,42 @@ module.exports = {
             {}
         );
 
-        await queryInterface.bulkInsert("posts", posts, {});
+        await queryInterface.bulkInsert(
+            "posts",
+            [
+                {
+                    userId: 1,
+                    categoryId: 1,
+                    statusId: 1,
+                    caption: "Inilah bedanya HTTP dengan HTTPS. Untuk sekarang https memang lebih sering dipakai nih. lebih secure....",
+                },
+                {
+                    userId: 1,
+                    categoryId: 5,
+                    statusId: 1,
+                    caption: "Selamat mengerjakan Latihan Soal UTBK SBMPTN yang tahu jawabannya komen dibawah ya yang benar akan dapat hadiah.",
+                },
+                {
+                    userId: 1,
+                    categoryId: 5,
+                    statusId: 1,
+                    caption: "Yuk latihan soal UTBK SBMPTN!. yang tahu jawabannya komen dibawah ya",
+                },
+                {
+                    userId: 1,
+                    categoryId: 1,
+                    statusId: 1,
+                    caption: "Kalian harus tau nih, bisa aja kedepannya Python jadi Bahasa Utama menggantikan JavaScript. Tapi menurut kalian mending mana?",
+                },
+                {
+                    userId: 1,
+                    categoryId: 5,
+                    statusId: 1,
+                    caption: "Jangan sampai broken terus your English hehehehehe. Nih, gimana cara translate kalimat Bahasa Inggris yang benar.",
+                },
+            ],
+            {}
+        );
 
         await queryInterface.bulkInsert(
             "post_categories",
@@ -88,10 +114,10 @@ module.exports = {
                     category: "Managemen",
                 },
                 {
-                    category: "Computer",
+                    category: "Bussiness",
                 },
                 {
-                    category: "Bussiness",
+                    category: "Pendidikan",
                 },
             ],
             {}
@@ -340,7 +366,32 @@ module.exports = {
             {}
         );
 
-        await queryInterface.bulkInsert("post_files", postFiles, {});
+        await queryInterface.bulkInsert(
+            "post_files",
+            [
+                {
+                    postId: 1,
+                    fileName: "1.png",
+                },
+                {
+                    postId: 2,
+                    fileName: "2.png",
+                },
+                {
+                    postId: 3,
+                    fileName: "3.png",
+                },
+                {
+                    postId: 4,
+                    fileName: "4.png",
+                },
+                {
+                    postId: 5,
+                    fileName: "5.png",
+                },
+            ],
+            {}
+        );
     },
 
     async down(queryInterface, Sequelize) {
