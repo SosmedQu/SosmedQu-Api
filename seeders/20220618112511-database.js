@@ -164,10 +164,10 @@ module.exports = {
                     category: "Managemen",
                 },
                 {
-                    category: "Computer",
+                    category: "Bussiness",
                 },
                 {
-                    category: "Bussiness",
+                    category: "Pendidikan",
                 },
             ],
             {}
@@ -309,8 +309,9 @@ module.exports = {
             [
                 {
                     userId: 1,
-                    categoryId: 4,
+                    categoryId: 1,
                     name: "Hacker-Crackdown",
+                    image: "hacker_crackdown.jpg",
                     fileName: "Hacker-Crackdown.pdf",
                     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
                     writer: "Masashi Kishimoto",
@@ -320,8 +321,9 @@ module.exports = {
                 },
                 {
                     userId: 1,
-                    categoryId: 5,
+                    categoryId: 4,
                     name: "Emma",
+                    image: "emma.jpg",
                     fileName: "Emma.pdf",
                     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
                     writer: "Masashi Kishimoto",
@@ -331,8 +333,9 @@ module.exports = {
                 },
                 {
                     userId: 1,
-                    categoryId: 4,
+                    categoryId: 1,
                     name: "3D-Graphics-Modelling-and-Rendering-mini-HOWTO",
+                    image: "3d_graphics.jpg",
                     fileName: "3D-Graphics-Modelling-and-Rendering-mini-HOWTO.pdf",
                     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
                     writer: "Masashi Kishimoto",
@@ -342,8 +345,9 @@ module.exports = {
                 },
                 {
                     userId: 1,
-                    categoryId: 4,
+                    categoryId: 1,
                     name: "The-Hacker's-Dictionary",
+                    image: "hacker_dictionary.jpg",
                     fileName: "The-Hacker's-Dictionary.pdf",
                     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
                     writer: "Masashi Kishimoto",
@@ -353,8 +357,9 @@ module.exports = {
                 },
                 {
                     userId: 1,
-                    categoryId: 4,
+                    categoryId: 1,
                     name: "The-Size-of-Your-Dreams",
+                    image: "size.jpg",
                     fileName: "The-Size-of-Your-Dreams.pdf",
                     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est perferendis enim fugit nulla error impedit obcaecati quos.",
                     writer: "Masashi Kishimoto",
