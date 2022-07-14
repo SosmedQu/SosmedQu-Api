@@ -14,6 +14,7 @@ const rankingController = require("../controllers/rankingController");
 const violationController = require("../controllers/violationController");
 const likeController = require("../controllers/likeController");
 const commentController = require("../controllers/commentController");
+const chattingController = require("../controllers/chatController");
 const {verifyToken} = require("../middleware/verifyToken");
 const {isAdmin} = require("../middleware/isAdmin");
 const {check} = require("express-validator");
@@ -410,4 +411,10 @@ router.post("/comments", commentController.createComment);
 router.get("/comments/:id", commentController.getAllComment); // id disini id postingan
 //? END OF ENDPOINT OF API COMMENT
 
+//? ENDPOINT API CHATTING
+router.get("/chatting/user", chattingController.getAllMyChatting);
+router.get("/chatting/user/:id", chattingController.getAllUserChat);
+router.post("/chatting/user", chattingController.createUserChat);
+
+//? END OF ENDPOINT OF API CHATTING
 module.exports = router;

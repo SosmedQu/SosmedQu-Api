@@ -22,6 +22,7 @@ module.exports = {
             statusId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                defaultValue: 1,
             },
             caption: {
                 type: Sequelize.TEXT,

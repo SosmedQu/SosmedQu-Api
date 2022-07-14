@@ -70,31 +70,26 @@ module.exports = {
                 {
                     userId: 1,
                     categoryId: 1,
-                    statusId: 1,
                     caption: "Inilah bedanya HTTP dengan HTTPS. Untuk sekarang https memang lebih sering dipakai nih. lebih secure....",
                 },
                 {
                     userId: 1,
                     categoryId: 5,
-                    statusId: 1,
                     caption: "Selamat mengerjakan Latihan Soal UTBK SBMPTN yang tahu jawabannya komen dibawah ya yang benar akan dapat hadiah.",
                 },
                 {
                     userId: 1,
                     categoryId: 5,
-                    statusId: 1,
                     caption: "Yuk latihan soal UTBK SBMPTN!. yang tahu jawabannya komen dibawah ya",
                 },
                 {
                     userId: 1,
                     categoryId: 1,
-                    statusId: 1,
                     caption: "Kalian harus tau nih, bisa aja kedepannya Python jadi Bahasa Utama menggantikan JavaScript. Tapi menurut kalian mending mana?",
                 },
                 {
                     userId: 1,
                     categoryId: 5,
-                    statusId: 1,
                     caption: "Jangan sampai broken terus your English hehehehehe. Nih, gimana cara translate kalimat Bahasa Inggris yang benar.",
                 },
             ],
